@@ -24,6 +24,11 @@
       }
     </style>
   </head>
+    @if (session('success'))
+        <div class="text-green-900 text-center">
+            {{ session('success') }} 
+        </div>
+    @endif
   <body class="h-full">
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -101,7 +106,7 @@
         <p class="mt-10 text-center text-sm text-gray-500">
           Don't have an account yet?
           <a
-            href="./register.html"
+            href="{{url('/register')}}"
             class="font-semibold leading-6 text-black hover:text-black"
             >Sign Up</a
           >
