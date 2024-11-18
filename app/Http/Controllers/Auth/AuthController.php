@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,4 +28,21 @@ class AuthController extends Controller
 
         return redirect()->back();
     }   
+
+    public function login(LoginRequest $request)
+    {
+        $credentials = [
+            'email'     => $request->email,
+            'password'  => $request->password,
+        ];
+      
+        if (Auth::attempt($credentials)) {
+            // Auth::login();
+            $request->session()->regenerate();
+ 
+            return to_route('dashboard');
+        }
+
+        return redirect()->back()->with('error', 'Wrong credentials');
+    }
 }

@@ -24,11 +24,6 @@
       }
     </style>
   </head>
-    @if (session('success'))
-        <div class="text-green-900 text-center">
-            {{ session('success') }} 
-        </div>
-    @endif
   <body class="h-full">
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -44,11 +39,24 @@
         </h1>
       </div>
 
+      @if (session('success'))
+        <div class="text-green-900 text-center font-bold">
+            {{ session('success') }} 
+        </div>
+      @endif
+      @if (session('error'))
+        <div class="text-red-900 text-center font-bold">
+            {{ session('error') }} 
+        </div>
+      @endif
+
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form
           class="space-y-6"
-          action="#"
-          method="POST">
+          method="POST"
+          action="{{route('login')}}"
+          >
+          @csrf
           <div>
             <label
               for="email"
