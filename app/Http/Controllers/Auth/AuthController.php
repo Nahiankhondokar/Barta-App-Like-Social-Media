@@ -37,12 +37,24 @@ class AuthController extends Controller
         ];
       
         if (Auth::attempt($credentials)) {
-            // Auth::login();
+            // $user = DB::table('users')->where('email', $request->email)->first();
+            // Auth::login($user);
             $request->session()->regenerate();
  
             return to_route('dashboard');
         }
 
         return redirect()->back()->with('error', 'Wrong credentials');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+     
+        $request->session()->invalidate();
+     
+        $request->session()->regenerateToken();
+     
+        return redirect('/login');
     }
 }
