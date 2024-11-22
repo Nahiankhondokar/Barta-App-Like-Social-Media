@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostStoreRequest;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +34,8 @@ class PostController extends Controller
     {
         try {
             DB::table('posts')->insert([
-                'barta'     => $request->barta
+                'barta'     => $request->barta,
+                'created_at'=> Carbon::now()
             ]);
 
             return redirect()->back()->with('success', 'Post created successfully');
