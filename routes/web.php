@@ -25,4 +25,6 @@ Route::middleware('auth')->group(function(){
         Route::get('/edit/{user}', [UserController::class, 'create'])->name('create');
         Route::put('/update/{user}', [UserController::class, 'update'])->name('update');
     });
+
+    Route::resource('post', PostController::class);
 });
