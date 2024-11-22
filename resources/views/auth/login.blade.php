@@ -40,14 +40,14 @@
       </div>
 
       @if (session('success'))
-        <div class="text-green-900 text-center font-bold">
-            {{ session('success') }} 
+        <div class="text-center font-bold bg-green-150 w-64 p-2 my-3 rounded-md m-auto text-green-700">
+            {{ session('success') }}
         </div>
       @endif
       @if (session('error'))
-        <div class="text-red-900 text-center font-bold">
-            {{ session('error') }} 
-        </div>
+          <div class="text-center font-bold bg-red-150 w-64 p-2 my-3 rounded-md m-auto text-red-700">
+              {{ session('error') }}
+          </div>
       @endif
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
