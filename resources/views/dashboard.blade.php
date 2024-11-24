@@ -323,7 +323,20 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
       <!-- /Barta Card Bottom -->
     </article>
     @empty
-      
+    <article
+      class="bg-white border-2 border-red-900 rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6">
+      <!-- Barta Card Top -->
+      <header>
+        <div class="flex items-center justify-center">
+          <div class="flex items-center space-x-3">
+            <!-- User Info -->
+            <div class="text-red-900 flex flex-col min-w-0 flex-1 ">
+              <p class="text-red-900 font-bold">Data not found !</p>
+            </div>
+          </div>
+        </div>
+      </header>
+    </article>
     @endforelse
   <!-- /Barta Card -->
 
