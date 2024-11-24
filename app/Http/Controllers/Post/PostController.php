@@ -66,6 +66,10 @@ class PostController extends Controller
      */
     public function update(PostUpdateRequest $request, Post $post)
     {
+        if(!$post){
+            return redirect()->route('dashboard')->with('success', 'Post not found!');
+        }
+
         $post->barta = $request->barta;
         $post->save();
 
@@ -77,6 +81,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if(!$post){
+            return redirect()->route('dashboard')->with('success', 'Post not found!');
+        }
+        $post->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Post deleted successfully');
     }
 }
