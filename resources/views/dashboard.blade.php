@@ -199,21 +199,24 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
                       aria-labelledby="user-menu-button"
                       tabindex="-1">
                 <a
-                        href="#"
+                        href="{{route('post.edit', $post->id)}}"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                         tabindex="-1"
                         id="user-menu-item-0"
                 >Edit</a
                 >
-                <a
-                        href="#"
-                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                        tabindex="-1"
-                        id="user-menu-item-1"
-                >Delete</a
-                >
+               <form method="POST" action="{{route('post.destroy', $post->id)}}" class="hover:bg-gray-100">
+                @csrf
+                @method('delete')
+                <button type="submit"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
+                tabindex="-1"
+                id="user-menu-item-1"
+        >Delete</button
+        >
+               </form>
               </div>
             </div>
 
@@ -224,17 +227,19 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
 
       <!-- Content -->
       <div class="py-4 text-gray-700 font-normal">
-        <p>
-          {{$post->barta}}
-          <br />
-          <a
-            href="#laravel"
-            class="text-black font-semibold hover:underline"
-            >#Laravel</a
-          >
-          <br />
-          <br />
-        </p>
+        <a href="{{route('post.show', $post->id)}}">
+          <p>
+            {{$post->barta}}
+            <br />
+            <a
+              href="#laravel"
+              class="text-black font-semibold hover:underline"
+              ></a
+            >
+            <br />
+            <br />
+          </p>
+        </a>
       </div>
 
       <!-- Date Created & View Stat -->
@@ -321,7 +326,20 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
       <!-- /Barta Card Bottom -->
     </article>
     @empty
-      
+    <article
+      class="bg-white border-2 border-red-900 rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6">
+      <!-- Barta Card Top -->
+      <header>
+        <div class="flex items-center justify-center">
+          <div class="flex items-center space-x-3">
+            <!-- User Info -->
+            <div class="text-red-900 flex flex-col min-w-0 flex-1 ">
+              <p class="text-red-900 font-bold">Data not found !</p>
+            </div>
+          </div>
+        </div>
+      </header>
+    </article>
     @endforelse
   <!-- /Barta Card -->
 
