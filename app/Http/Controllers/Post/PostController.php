@@ -13,28 +13,13 @@ use Illuminate\Support\Facades\DB;
 class PostController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(PostStoreRequest $request)
     {
         try {
             DB::table('posts')->insert([
+                'user_id'   => auth()->user()->id,
                 'barta'     => $request->barta,
                 'created_at'=> Carbon::now()
             ]);
@@ -58,6 +43,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        if(auth()->user()->id != $post->user_id){
+            return redirect()->back()->with('error', 'Invalid user!');
+        }
         return view('post.edit', ['post' => $post]);
     }
 
@@ -66,6 +54,10 @@ class PostController extends Controller
      */
     public function update(PostUpdateRequest $request, Post $post)
     {
+        if(auth()->user()->id != $post->user_id){
+            return redirect()->back()->with('error', 'Invalid user!');
+        }
+
         if(!$post){
             return redirect()->route('dashboard')->with('success', 'Post not found!');
         }
@@ -81,6 +73,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if(auth()->user()->id != $post->user_id){
+            return redirect()->back()->with('error', 'Invalid user!');
+        }
+
         if(!$post){
             return redirect()->route('dashboard')->with('success', 'Post not found!');
         }
