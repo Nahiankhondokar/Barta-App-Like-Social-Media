@@ -168,7 +168,8 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
             </div>
             <!-- /User Info -->
           </div>
-
+          
+          @if(auth()->user()->id == $post->user_id)
           <!-- Card Action Dropdown -->
           <div class="flex flex-shrink-0 self-center" x-data="{ open: false }">
             <div class="relative inline-block text-left">
@@ -190,38 +191,40 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
                 </button>
               </div>
               <!-- Dropdown menu -->
-              <div
-                      x-show="open"
-                      @click.away="open = false"
-                      class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="user-menu-button"
-                      tabindex="-1">
-                <a
-                        href="{{route('post.edit', $post->id)}}"
-                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        role="menuitem"
-                        tabindex="-1"
-                        id="user-menu-item-0"
-                >Edit</a
-                >
-               <form method="POST" action="{{route('post.destroy', $post->id)}}" class="hover:bg-gray-100">
-                @csrf
-                @method('delete')
-                <button type="submit"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                role="menuitem"
-                tabindex="-1"
-                id="user-menu-item-1"
-                >Delete</button
-                >
-               </form>
+                <div
+                  x-show="open"
+                  @click.away="open = false"
+                  class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="user-menu-button"
+                  tabindex="-1">
+                  <a
+                          href="{{route('post.edit', $post->id)}}"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          role="menuitem"
+                          tabindex="-1"
+                          id="user-menu-item-0"
+                  >Edit</a
+                  >
+                  <form method="POST" action="{{route('post.destroy', $post->id)}}" class="hover:bg-gray-100">
+                    @csrf
+                    @method('delete')
+                    <button type="submit"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    role="menuitem"
+                    tabindex="-1"
+                    id="user-menu-item-1"
+                    >Delete</button
+                    >
+                  </form>
+                </div>
+                
               </div>
+              
             </div>
-
-          </div>
-          <!-- /Card Action Dropdown -->
+            <!-- /Card Action Dropdown -->
+            @endif
         </div>
       </header>
 

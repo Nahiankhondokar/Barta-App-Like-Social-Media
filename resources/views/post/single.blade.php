@@ -42,6 +42,7 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
           <!-- /User Info -->
         </div>
 
+        @if(auth()->user()->id == $post->user_id)
         <!-- Card Action Dropdown -->
         <div class="flex flex-shrink-0 self-center" x-data="{ open: false }">
           <div class="relative inline-block text-left">
@@ -63,6 +64,7 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
               </button>
             </div>
             <!-- Dropdown menu -->
+            
             <div
                     x-show="open"
                     @click.away="open = false"
@@ -89,9 +91,10 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
               >
             </div>
           </div>
-
+          
         </div>
         <!-- /Card Action Dropdown -->
+        @endif
       </div>
     </header>
 
