@@ -18,9 +18,14 @@ class PostController extends Controller
     public function store(PostStoreRequest $request)
     {
         try {
-            DB::table('posts')->insert([
+            $file = $request->file('image');
+            $fileName = md5(rand().time()).'.'.$file->extension();
+            $pathWithFile = $file->storeAs('post', $fileName);
+
+            Post::query()->create([
                 'user_id'   => auth()->user()->id,
                 'barta'     => $request->barta,
+                'image'     => $pathWithFile,
                 'created_at'=> Carbon::now()
             ]);
 
