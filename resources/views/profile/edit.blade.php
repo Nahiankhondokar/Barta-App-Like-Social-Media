@@ -6,7 +6,7 @@
 class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
 <!-- Profile Edit Form -->
 
-<form method="POST" action="{{route('profile.update', $user->id)}}">
+<form method="POST" action="{{route('profile.update', $user->id)}}" enctype="multipart/form-data">
     @csrf
     @method('put')
   <div class="space-y-12">
@@ -29,7 +29,7 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
             <input
               class="hidden"
               type="file"
-              name="avatar"
+              name="image"
               id="avatar"
             />
             <!-- Uncomment this image tag if required -->

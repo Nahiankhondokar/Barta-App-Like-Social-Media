@@ -24,11 +24,18 @@ class UserController extends Controller
 
     public function update(Request $request, $id): RedirectResponse
     {
+        if($request->has('image')){
+            $file = $request->file('image');
+            $fileName = md5(rand().time()).'.'.$file->extension();
+            $pathWithFile = $file->storeAs('profile', $fileName);
+        }
+
         $user = User::query()->find($id);
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->bio      = $request->bio;
         $user->username = $request->username;
+        $user->image    = $pathWithFile ?? null;
         $user->update();
 
         if($request->password){
