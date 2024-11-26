@@ -35,6 +35,7 @@ class PostController extends Controller
     {
         try {
             DB::table('posts')->insert([
+                'user_id'   => auth()->user()->id,
                 'barta'     => $request->barta,
                 'created_at'=> Carbon::now()
             ]);
@@ -58,6 +59,11 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $post->load('user');
+        dd($post->post->user->id);
+        if(!auth()->user()->id == $post->post->user->id){
+
+        }
         return view('post.edit', ['post' => $post]);
     }
 
