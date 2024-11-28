@@ -27,4 +27,6 @@ Route::middleware('auth')->group(function(){
     });
 
     Route::resource('post', PostController::class);
+
+    Route::post('/search', [UserController::class, 'search'])->name('search');
 });

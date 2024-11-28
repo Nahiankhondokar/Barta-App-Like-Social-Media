@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
+use Laravel\Ui\Presets\React;
 
 class UserController extends Controller
 {
@@ -44,5 +45,15 @@ class UserController extends Controller
         }
 
         return redirect()->route('profile.index')->with('success', 'Profile updated');
+    }
+
+    public function search(Request $request)
+    {
+        $posts = User::query()
+       
+        ->whereFullText(['name', 'username', 'email'], $request->search)
+        ->get();
+
+        return redirect()->route('dashboard', compact('posts'));
     }
 }

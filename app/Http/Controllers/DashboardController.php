@@ -10,7 +10,8 @@ class DashboardController extends Controller
 {
     public function index() 
     {
-        $posts = DB::table('posts')->orderByDesc('id')->get();
+        $posts = Post::query()->with('user')->orderBy('id', 'desc')->get();
+        // dd($posts->toArray());
         return view('dashboard', compact('posts'));    
     }
 }
