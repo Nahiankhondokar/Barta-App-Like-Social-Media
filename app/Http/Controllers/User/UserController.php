@@ -9,7 +9,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
-use Laravel\Ui\Presets\React;
 
 class UserController extends Controller
 {
@@ -26,10 +25,10 @@ class UserController extends Controller
 
     public function update(Request $request, $id): RedirectResponse
     {
-        if($request->has('image')){
+        if($request->hasFile('image')){
             $file = $request->file('image');
             $fileName = md5(rand().time()).'.'.$file->extension();
-            $pathWithFile = $file->storeAs('profile', $fileName);
+            $pathWithFile = 'storage/'.$file->storePubliclyAs('profile', $fileName, 'public');
         }
 
         $user = User::query()->find($id);
@@ -48,7 +47,7 @@ class UserController extends Controller
         return redirect()->route('profile.index')->with('success', 'Profile updated');
     }
 
-    public function search(Request $request)
+    public function search(Request $request): View
     {
         $posts = Post::query()
         ->whereHas('user', function($q) use ($request){

@@ -36,7 +36,7 @@
           <input
               type="text"
               name="search"
-              placeholder="Search..."
+              placeholder="Search by name, username, email, post..."
               value="{{old('search')}}"
               class="border-2 border-gray-300 bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
           />
