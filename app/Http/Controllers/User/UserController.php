@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,11 +50,13 @@ class UserController extends Controller
 
     public function search(Request $request)
     {
-        $posts = User::query()
-       
-        ->whereFullText(['name', 'username', 'email'], $request->search)
+        $posts = Post::query()
+        ->whereHas('user', function($q) use ($request){
+            $q->whereFullText(['name', 'username', 'email'], $request->search);
+        })
+        ->orWhereFullText(['barta'], $request->search)
         ->get();
 
-        return redirect()->route('dashboard', compact('posts'));
+        return view('post.post-search', compact('posts'));
     }
 }
