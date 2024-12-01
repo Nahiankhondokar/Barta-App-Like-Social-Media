@@ -25,8 +25,8 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
               <div class="flex-shrink-0">
                    <img
                       class="h-10 w-10 rounded-full object-cover"
-                      src="https://avatars.githubusercontent.com/u/61485238"
-                      alt="Al Nahian" />
+                      src="{{asset(auth()->user()->image)}}"
+                      alt="Image" />
               </div>
             <!-- /User Avatar -->
 
@@ -121,7 +121,11 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
             <br />
           </p>
         </a>
-        <img src="{{Storage::url($post->image)}}" alt="">
+        @if($post->image)
+          <img src="{{asset($post->image)}}" alt="">
+        @else 
+          <img src="{{asset('assets/image/no-img/no-img.jpg')}}" alt="no image">
+        @endif
       </div>
 
       <!-- Date Created & View Stat -->
