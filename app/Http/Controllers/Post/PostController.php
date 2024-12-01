@@ -9,6 +9,7 @@ use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -18,9 +19,16 @@ class PostController extends Controller
     public function store(PostStoreRequest $request)
     {
         try {
-            DB::table('posts')->insert([
+           if($request->hasFile('image')){
+                $file = $request->file('image');
+                $fileName = md5(rand().time()).'.'.$file->extension();
+                $pathWithFile = 'storage/'.$file->storePubliclyAs('post', $fileName, 'public');
+            }
+
+            Post::query()->create([
                 'user_id'   => auth()->user()->id,
                 'barta'     => $request->barta,
+                'image'     => $pathWithFile ?? null,
                 'created_at'=> Carbon::now()
             ]);
 
@@ -62,7 +70,20 @@ class PostController extends Controller
             return redirect()->route('dashboard')->with('success', 'Post not found!');
         }
 
+        if($request->hasFile('image')){
+            Storage::disk('public')->delete($post->image);
+
+            $file = $request->file('image');
+            $fileName = md5(rand().time()).'.'.$file->extension();
+            $pathWithFile = 'storage/'.$file->storePubliclyAs('post', $fileName, 'public');
+            
+        }else {
+            $pathWithFile = $post->image;
+        }
+
+        
         $post->barta = $request->barta;
+        $post->image = $pathWithFile ?? null;
         $post->save();
 
         return redirect()->route('dashboard')->with('success', 'Post updated successfully');

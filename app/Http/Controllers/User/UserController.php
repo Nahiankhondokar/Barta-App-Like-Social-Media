@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,11 +25,18 @@ class UserController extends Controller
 
     public function update(Request $request, $id): RedirectResponse
     {
+        if($request->hasFile('image')){
+            $file = $request->file('image');
+            $fileName = md5(rand().time()).'.'.$file->extension();
+            $pathWithFile = 'storage/'.$file->storePubliclyAs('profile', $fileName, 'public');
+        }
+
         $user = User::query()->find($id);
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->bio      = $request->bio;
         $user->username = $request->username;
+        $user->image    = $pathWithFile ?? null;
         $user->update();
 
         if($request->password){
@@ -37,5 +45,17 @@ class UserController extends Controller
         }
 
         return redirect()->route('profile.index')->with('success', 'Profile updated');
+    }
+
+    public function search(Request $request): View
+    {
+        $posts = Post::query()
+        ->whereHas('user', function($q) use ($request){
+            $q->whereFullText(['name', 'username', 'email'], $request->search);
+        })
+        ->orWhereFullText(['barta'], $request->search)
+        ->get();
+
+        return view('post.post-search', compact('posts'));
     }
 }

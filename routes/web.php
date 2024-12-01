@@ -20,11 +20,13 @@ Route::middleware('auth')->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::resource('post', PostController::class);
+
     Route::prefix('profile')->name('profile.')->group(function(){
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::get('/edit/{user}', [UserController::class, 'create'])->name('create');
         Route::put('/update/{user}', [UserController::class, 'update'])->name('update');
     });
 
-    Route::resource('post', PostController::class);
+    Route::post('/post-search', [UserController::class, 'search'])->name('search');
 });

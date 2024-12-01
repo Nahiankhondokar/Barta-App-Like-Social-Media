@@ -22,7 +22,8 @@ class PostStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'barta'     => ['required', 'string']
+            'barta'     => ['required', 'string'],
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }
