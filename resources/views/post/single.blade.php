@@ -17,24 +17,24 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <!-- User Avatar -->
-<!--                <div class="flex-shrink-0">-->
-<!--                  <img-->
-<!--                    class="h-10 w-10 rounded-full object-cover"-->
-<!--                    src="https://avatars.githubusercontent.com/u/61485238"-->
-<!--                    alt="Al Nahian" />-->
-<!--                </div>-->
+            <div class="flex-shrink-0">
+              <img
+              class="h-10 w-10 rounded-full object-cover"
+              src="{{asset(auth()->user()->image)}}"
+                alt="{{auth()->user()->username}}" />
+            </div>
           <!-- /User Avatar -->
 
           <!-- User Info -->
           <div class="text-gray-900 flex flex-col min-w-0 flex-1">
             <a
-              href="profile.html"
+              href="{{route('profile.index')}}"
               class="hover:underline font-semibold line-clamp-1">
               {{auth()->user()->username}}
             </a>
 
             <a
-              href="profile.html"
+              href="{{route('profile.index')}}"
               class="hover:underline text-sm text-gray-500 line-clamp-1">
               {{auth()->user()->email}}
             </a>
@@ -113,6 +113,7 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
         <br />
        
       </p>
+      <img src="{{asset($post->image)}}" alt="">
     </div>
 
     <!-- Date Created & View Stat -->

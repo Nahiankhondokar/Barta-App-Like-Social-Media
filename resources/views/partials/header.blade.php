@@ -102,8 +102,8 @@
                 <span class="sr-only">Open user menu</span>
                 <img
                   class="h-8 w-8 rounded-full"
-                  src="https://avatars.githubusercontent.com/u/831997"
-                  alt="Ahmed Shamim Hasan Shaon" />
+                  src="{{asset(auth()->user()->image)}}"
+                  alt="{{auth()->user()->username}}" />
               </button>
             </div>
 
