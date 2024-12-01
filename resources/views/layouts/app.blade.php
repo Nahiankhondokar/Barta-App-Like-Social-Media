@@ -21,7 +21,9 @@
         </div>
     @endif
 
-    @yield('content')
+    {{-- @yield('content') --}}
+
+    <div id="app"></div>
 
     @include('partials.footer')
   </body>
