@@ -8,11 +8,18 @@ use App\Http\Requests\PostUpdateRequest;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
+
+    public function index()
+    {
+        $posts = Post::query()->with('user')->orderBy('id', 'desc')->get();
+        return response()->json($posts);    
+    }
+
     /**
      * Store a newly created resource in storage.
      */

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,5 +57,11 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
      
         return redirect('/login');
+    }
+
+    public function me(): JsonResponse
+    {
+        $authUser = auth()->user();
+        return response()->json($authUser);
     }
 }
