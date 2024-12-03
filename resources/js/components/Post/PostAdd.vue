@@ -1,4 +1,56 @@
-<script setup></script>
+<script setup>
+import { onMounted, ref } from "vue";
+import { toast } from "vue3-toastify";
+import ImageShow from "../ImageShow/ImageShow.vue";
+
+const authUser = ref({});
+let form = ref({
+    barta: "",
+    image: null,
+});
+
+function handleImageUpload(e) {
+    let file = event.target.files[0];
+    if (file) {
+        form.value.image = file;
+    }
+}
+
+const handlePostSubmit = async () => {
+    const formData = new FormData();
+    formData.append("barta", form.value.barta);
+    if (form.value.image) {
+        formData.append("image", form.value.image);
+    }
+
+    await axios
+        .post("post", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        .then(function (response) {
+            console.log("created");
+            toast("Post Created Successfully !", {
+                autoClose: 1000,
+            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+onMounted(() => {
+    axios
+        .get("me")
+        .then(function (response) {
+            authUser.value = response.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
+</script>
 
 <template>
     <!-- Barta Create Post Card -->
@@ -6,17 +58,16 @@
         method="POST"
         enctype="multipart/form-data"
         class="bg-white border-2 border-black rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6 space-y-3"
-        action=""
+        @submit.prevent="handlePostSubmit"
     >
         <!-- Create Post Card Top -->
         <div>
             <div class="flex items-start /space-x-3/">
                 <!-- User Avatar -->
                 <div class="flex-shrink-0">
-                    <img
-                        class="h-10 w-10 rounded-full object-cover"
-                        src=""
-                        alt="image"
+                    <ImageShow
+                        :ïmage="authUser.image"
+                        css="h-10 w-10 rounded-full object-cover"
                     />
                 </div>
                 <!-- /User Avatar -->
@@ -25,7 +76,7 @@
                 <div class="text-gray-700 font-normal w-full">
                     <textarea
                         class="block w-full p-2 pt-2 text-gray-900 rounded-lg border-none outline-none focus:ring-0 focus:ring-offset-0"
-                        name="barta"
+                        v-model="form.barta"
                         rows="2"
                         placeholder="What's going on, ?"
                     ></textarea>
@@ -42,9 +93,9 @@
                     <div>
                         <input
                             type="file"
-                            name="image"
                             id="picture"
                             class="hidden"
+                            @change="handleImageUpload()"
                         />
                         <label
                             for="picture"

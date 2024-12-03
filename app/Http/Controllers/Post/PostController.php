@@ -32,16 +32,16 @@ class PostController extends Controller
                 $pathWithFile = 'storage/'.$file->storePubliclyAs('post', $fileName, 'public');
             }
 
-            Post::query()->create([
+            $post = Post::query()->create([
                 'user_id'   => auth()->user()->id,
                 'barta'     => $request->barta,
                 'image'     => $pathWithFile ?? null,
                 'created_at'=> Carbon::now()
             ]);
 
-            return redirect()->back()->with('success', 'Post created successfully');
+            return response()->json($post);  
         } catch (\Throwable $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return response()->json($e->getMessage(), 401);  
         }
     }
 

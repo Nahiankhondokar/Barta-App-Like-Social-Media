@@ -17,5 +17,10 @@
         "sass": "^1.56.1",
         "tailwindcss": "^3.4.13",
         "vite": "^5.0"
+    },
+    "dependencies": {
+        "moment": "^2.30.1",
+        "vue-router": "^4.5.0",
+        "vue3-toastify": "^0.2.5"
     }
 }
