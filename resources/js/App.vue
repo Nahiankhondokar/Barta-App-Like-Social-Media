@@ -1,7 +1,12 @@
 <script setup>
+import Footer from './components/Layouts/Footer.vue';
+import Header from './components/Layouts/Header.vue';
+
 //
 </script>
 
 <template>
-    <h1>App Vue</h1>
+    <Header />
+        <router-view></router-view>
+    <Footer />
 </template>

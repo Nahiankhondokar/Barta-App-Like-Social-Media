@@ -22,9 +22,9 @@
         </div>
     @endif
 
-    <div id="app">
+    {{-- <div id="app"> --}}
       @yield('content')
-    </div>
+    {{-- </div> --}}
 
     @include('partials.footer')
   </body>
