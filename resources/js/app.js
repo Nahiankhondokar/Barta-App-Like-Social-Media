@@ -8,5 +8,4 @@ import Posts from './components/Post/Posts.vue';
 const app = createApp(App);
 
 app.use(router)
-app.component('posts', Posts)
 app.mount('#app');
