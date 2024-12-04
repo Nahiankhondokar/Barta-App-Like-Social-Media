@@ -37,17 +37,12 @@
                         <!--              </div>-->
                     </div>
                     <!-- Search input -->
-                    <form
-                        action="{{route('search')}}"
-                        method="POST"
-                        class="flex items-center"
-                    >
-                        @csrf
+                    <form action="" method="POST" class="flex items-center">
                         <input
                             type="text"
                             name="search"
                             placeholder="Search by name, username, email, post..."
-                            value="{{old('search')}}"
+                            value=""
                             class="border-2 border-gray-300 bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
                         />
                     </form>
@@ -129,7 +124,7 @@
                                 tabindex="-1"
                             >
                                 <a
-                                    href="{{route('profile.index')}}"
+                                    href=""
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"
@@ -137,7 +132,7 @@
                                     >Your Profile</a
                                 >
                                 <a
-                                    href="{{route('profile.create', auth()->user()->id)}}"
+                                    href=""
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"
@@ -145,7 +140,7 @@
                                     >Edit Profile</a
                                 >
                                 <a
-                                    href="{{route('logout')}}"
+                                    href=""
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"
