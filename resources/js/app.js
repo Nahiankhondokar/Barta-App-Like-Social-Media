@@ -2,7 +2,7 @@ import './bootstrap';
 import { createApp } from 'vue';
 import router from './router';
 import App from './App.vue';
-import Posts from './components/Post/Posts.vue';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
  
 const app = createApp(App);

@@ -6,17 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Traits\sendApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    use sendApiResponse;
+
     public function register(RegisterRequest $request)
     {
-        $user = DB::table('users')->insert([
+        $user = User::query()->create([
             'name'          => $request->name,
             'username'      => $request->username,
             'email'         => $request->email,
@@ -24,10 +26,9 @@ class AuthController extends Controller
         ]);
         
         if($user){
-            return to_route('login.view')->with('success', 'User registration successful');
+            return $this->sendApiResponse($user, "User registration successfull");
         }
-
-        return redirect()->back();
+        return $this->sendApiResponse('', "User registration failed");
     }   
 
     public function login(LoginRequest $request)

@@ -3,8 +3,20 @@ import NotFound from "../components/NotFound/NotFound.vue";
 import Posts from "../components/Post/Posts.vue";
 import ProfileView from "../components/Profile/ProfileView.vue";
 import ProfileEdit from "../components/Profile/ProfileEdit.vue";
+import Register from "../components/Auth/Register.vue";
+import Login from "../components/Auth/Login.vue";
 
 const routes = [
+    {
+        path: "/login",
+        name : "Login",
+        component: Login
+    },
+    {
+        path: "/register",
+        name : "Register",
+        component: Register
+    },
     {
         path: "/dashboard",
         name : "Dashboard",
