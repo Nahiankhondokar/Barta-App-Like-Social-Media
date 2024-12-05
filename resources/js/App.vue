@@ -4,7 +4,7 @@ import Header from "./components/Layouts/Header.vue";
 </script>
 
 <template>
-    <Header />
+    <Header></Header>
     <router-view></router-view>
-    <Footer />
+    <Footer></Footer>
 </template>

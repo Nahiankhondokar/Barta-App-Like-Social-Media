@@ -5,12 +5,17 @@ import ProfileView from "../components/Profile/ProfileView.vue";
 
 const routes = [
     {
+        path: "/",
+        name : "Profile",
+        component: ProfileView
+    },
+    {
         path: "/dashboard",
         name : "Dashboard",
         component: Posts
     },
     {
-        path: "/profile/:id",
+        path: '/profile',
         name : "Profile",
         component: ProfileView
     },

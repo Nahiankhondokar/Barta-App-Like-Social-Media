@@ -10,4 +10,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function(){
     return view('spa');
 });
-// Route::redirect('/', '/login');
+
+Route::view('/{any}', 'spa')->where('any', '.*');
+
