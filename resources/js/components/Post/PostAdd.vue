@@ -24,7 +24,7 @@ const handlePostSubmit = async () => {
     }
 
     await axios
-        .post("post", formData, {
+        .post("api/post", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -42,7 +42,7 @@ const handlePostSubmit = async () => {
 
 onMounted(() => {
     axios
-        .get("me")
+        .get("api/me")
         .then(function (response) {
             authUser.value = response.data;
         })
@@ -55,8 +55,6 @@ onMounted(() => {
 <template>
     <!-- Barta Create Post Card -->
     <form
-        method="POST"
-        enctype="multipart/form-data"
         class="bg-white border-2 border-black rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6 space-y-3"
         @submit.prevent="handlePostSubmit"
     >

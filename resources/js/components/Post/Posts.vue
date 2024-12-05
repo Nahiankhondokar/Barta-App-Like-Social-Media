@@ -10,7 +10,7 @@ let postMoreoption = ref(false);
 
 onMounted(() => {
     axios
-        .get("post")
+        .get("api/post")
         .then(function (response) {
             posts.push(...response.data);
         })
