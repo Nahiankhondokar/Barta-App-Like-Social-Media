@@ -1,5 +1,7 @@
 <script setup>
-//
+import { ref } from "vue";
+
+let moreOption = ref(false);
 </script>
 
 <template>
@@ -13,9 +15,9 @@
                 <div class="flex h-16 justify-between">
                     <div class="flex">
                         <div class="flex flex-shrink-0 items-center">
-                            <a href="/">
+                            <router-link to="/dashboard">
                                 <h2 class="font-bold text-2xl">Barta</h2>
-                            </a>
+                            </router-link>
                         </div>
                         <!--              <div class="hidden sm:ml-6 sm:flex sm:space-x-8">-->
                         <!--                &lt;!&ndash; Current: "border-gray-800 text-gray-900 font-semibold", Default: "border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-800" &ndash;&gt;-->
@@ -94,10 +96,10 @@
                         <!--              </button>-->
 
                         <!-- Profile dropdown -->
-                        <div class="relative ml-3" x-data="{ open: false }">
+                        <div class="relative ml-3" x-data="{open : false}">
                             <div>
                                 <button
-                                    @click="open = !open"
+                                    @click="moreOption = !moreOption"
                                     type="button"
                                     class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                                     id="user-menu-button"
@@ -115,29 +117,32 @@
 
                             <!-- Dropdown menu -->
                             <div
-                                x-show="open"
-                                @click.away="open = false"
+                                :x-show="moreOption"
+                                @click="moreOption = false"
                                 class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                 role="menu"
                                 aria-orientation="vertical"
                                 aria-labelledby="user-menu-button"
                                 tabindex="-1"
                             >
-                                <a
-                                    href=""
+                                <router-link
+                                    :to="{ name: 'Profile', params: { id: 2 } }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"
                                     id="user-menu-item-0"
-                                    >Your Profile</a
+                                    >Your Profile</router-link
                                 >
-                                <a
-                                    href=""
+                                <router-link
+                                    :to="{
+                                        name: 'ProfileEdit',
+                                        params: { id: 2 },
+                                    }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"
                                     id="user-menu-item-1"
-                                    >Edit Profile</a
+                                    >Edit Profile</router-link
                                 >
                                 <a
                                     href=""

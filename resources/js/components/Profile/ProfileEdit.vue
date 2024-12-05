@@ -58,11 +58,7 @@
     >
         <!-- Profile Edit Form -->
 
-        <form
-            method="POST"
-            action="{{route('profile.update', $user->id)}}"
-            enctype="multipart/form-data"
-        >
+        <form method="POST" action="" enctype="multipart/form-data">
             @csrf @method('put')
             <div class="space-y-12">
                 <div class="border-b border-gray-900/10 pb-12">
@@ -91,7 +87,7 @@
                                 <!-- Uncomment this image tag if required -->
                                 <img
                                     class="h-12 w-12 rounded-full"
-                                    src="{{asset($user->image)}}"
+                                    src=""
                                     alt="Ahmed Shamim Hasan Shaon"
                                 />
                                 <svg
@@ -131,7 +127,7 @@
                                         name="name"
                                         id="first-name"
                                         autocomplete="given-name"
-                                        value="{{$user->name}}"
+                                        value=""
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -148,7 +144,7 @@
                                         type="text"
                                         name="username"
                                         id="last-name"
-                                        value="{{$user->username}}"
+                                        value=""
                                         autocomplete="family-name"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
@@ -167,7 +163,7 @@
                                         name="email"
                                         type="email"
                                         autocomplete="email"
-                                        value="{{$user->email}}"
+                                        value=""
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
