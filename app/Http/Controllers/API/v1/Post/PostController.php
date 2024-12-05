@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Post;
+namespace App\Http\Controllers\API\v1\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostStoreRequest;
