@@ -39,30 +39,22 @@ class AuthController extends Controller
         ];
       
         if (Auth::attempt($credentials)) {
-            // $user = DB::table('users')->where('email', $request->email)->first();
-            // Auth::login($user);
-            $request->session()->regenerate();
- 
-            return to_route('dashboard');
+            $auth = auth()->user();
+            return $this->sendApiResponse($auth, "User login successfull");
         }
 
-        return redirect()->back()->with('error', 'Wrong credentials');
+        return $this->sendApiResponse('', "User login successfull");
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
-     
-        $request->session()->invalidate();
-     
-        $request->session()->regenerateToken();
-     
-        return redirect('/login');
+        return $this->sendApiResponse('', "User logout successfull");
     }
 
     public function me(): JsonResponse
     {
         $authUser = auth()->user();
-        return response()->json($authUser);
+        return $this->sendApiResponse($authUser , "LoggedIn user");
     }
 }
