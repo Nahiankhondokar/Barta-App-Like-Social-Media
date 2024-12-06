@@ -1,27 +1,29 @@
 <script setup>
-// const handleUserRegister = async () => {
-//     const formData = new FormData();
-//     formData.append("barta", form.value.barta);
-//     if (form.value.image) {
-//         formData.append("image", form.value.image);
-//     }
+import { ref } from 'vue';
+import { useToast } from 'vue-toast-notification';
 
-//     await axios
-//         .post("api/post", formData, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             },
-//         })
-//         .then(function (response) {
-//             console.log("created");
-//             toast("Post Created Successfully !", {
-//                 autoClose: 1000,
-//             });
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// };
+const $toast = useToast();
+let form = ref({
+    email : "",
+    password : ""
+});
+
+
+const handleUserLogin = async () => {
+    const formData = new FormData();
+    formData.append("email", form.value.email);
+    formData.append("password", form.value.password);
+
+    await axios
+        .post("api/login", formData)
+        .then(function (response) {
+            localStorage.setItem('loggedIn', 'true');
+            $toast.success(response.data.message);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
 </script>
 
 <template>
@@ -41,8 +43,8 @@
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form class="space-y-6" method="POST">
-                @csrf
+            <form class="space-y-6" @submit.prevent="handleUserLogin">
+                
                 <div>
                     <label
                         for="email"
@@ -52,7 +54,7 @@
                     <div class="mt-2">
                         <input
                             id="email"
-                            name="email"
+                            v-model="form.email"
                             type="email"
                             autocomplete="email"
                             placeholder="bruce@wayne.com"
@@ -80,7 +82,7 @@
                     <div class="mt-2">
                         <input
                             id="password"
-                            name="password"
+                            v-model="form.password"
                             type="password"
                             autocomplete="current-password"
                             placeholder="••••••••"

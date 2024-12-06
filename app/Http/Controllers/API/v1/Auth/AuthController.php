@@ -33,23 +33,26 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $credentials = [
-            'email'     => $request->email,
-            'password'  => $request->password,
-        ];
-      
+        $credentials = $request->only('email', 'password');
+    
         if (Auth::attempt($credentials)) {
-            $auth = auth()->user();
-            return $this->sendApiResponse($auth, "User login successfull");
+            $request->session()->regenerate();
+            $user = auth()->user();
+    
+            return $this->sendApiResponse($user, "User login successful");
         }
-
-        return $this->sendApiResponse('', "User login successfull");
+    
+        return $this->sendApiResponse([], "User login failed",'',[], 401);
     }
+    
 
     public function logout(Request $request)
     {
-        Auth::logout();
-        return $this->sendApiResponse('', "User logout successfull");
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return $this->sendApiResponse([], "Logged out successfully");
     }
 
     public function me(): JsonResponse
