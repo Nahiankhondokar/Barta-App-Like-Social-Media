@@ -1,7 +1,24 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 
 let moreOption = ref(false);
+const authUser = reactive({
+    user: {},
+});
+
+onMounted(() => {
+    axios
+        .get("api/user")
+        .then(function (response) {
+            console.log(response);
+            authUser.user = response.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
+
+console.log(authUser);
 </script>
 
 <template>
