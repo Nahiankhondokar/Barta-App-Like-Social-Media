@@ -1,13 +1,13 @@
 <script setup>
-import { ref } from 'vue';
-import { useToast } from 'vue-toast-notification';
+import { ref } from "vue";
+import router from "@/router";
+import { useToast } from "vue-toast-notification";
 
 const $toast = useToast();
 let form = ref({
-    email : "",
-    password : ""
+    email: "",
+    password: "",
 });
-
 
 const handleUserLogin = async () => {
     const formData = new FormData();
@@ -17,7 +17,8 @@ const handleUserLogin = async () => {
     await axios
         .post("api/login", formData)
         .then(function (response) {
-            localStorage.setItem('loggedIn', 'true');
+            localStorage.setItem("loggedIn", "true");
+            router.push({ name: "Dashboard" });
             $toast.success(response.data.message);
         })
         .catch(function (error) {
@@ -44,7 +45,6 @@ const handleUserLogin = async () => {
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form class="space-y-6" @submit.prevent="handleUserLogin">
-                
                 <div>
                     <label
                         for="email"

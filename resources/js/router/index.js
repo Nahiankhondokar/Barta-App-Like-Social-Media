@@ -10,27 +10,32 @@ const routes = [
     {
         path: "/login",
         name : "Login",
-        component: Login
+        component: Login,
+        meta : {requiresAuth : false}
     },
     {
         path: "/register",
         name : "Register",
-        component: Register
+        component: Register,
+        meta : {requiresAuth : false}
     },
     {
-        path: "/dashboard",
+        path: "/",
         name : "Dashboard",
-        component: Posts
+        component: Posts,
+        meta: { requiresAuth: true }
     },
     {
         path: '/profile/:id',
         name : "Profile",
-        component: ProfileView
+        component: ProfileView,
+        meta: { requiresAuth: true }
     },
     {
         path: '/profile-edit/:id',
         name : "ProfileEdit",
-        component: ProfileEdit
+        component: ProfileEdit,
+        meta: { requiresAuth: true }
     },
     {
         path: '/:pathMatch(.*)*',
@@ -43,5 +48,17 @@ const router = createRouter({
     history : createWebHistory(),
     routes
 });
+
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = !!localStorage.getItem('loggedIn');
+    console.log(isAuthenticated)
+    if (to.meta.requiresAuth && !isAuthenticated) {
+      next({ name: 'Login' });
+    } else if (!to.meta.requiresAuth && isAuthenticated) {
+      next({ name: 'Dashboard' });
+    } else {
+      next();
+    }
+  });
 
 export default router;
