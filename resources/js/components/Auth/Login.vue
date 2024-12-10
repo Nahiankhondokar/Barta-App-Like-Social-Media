@@ -8,6 +8,7 @@ let form = ref({
     email: "",
     password: "",
 });
+let errors = ref({});
 
 const handleUserLogin = async () => {
     const formData = new FormData();
@@ -22,8 +23,8 @@ const handleUserLogin = async () => {
             $toast.success(response.data.message);
         })
         .catch(function (error) {
-            $toast.error(error.response.data.message);
-            console.log(error);
+            $toast.error("Login faild !");
+            errors.value = error.response.data.errors;
         });
 };
 </script>
@@ -63,6 +64,9 @@ const handleUserLogin = async () => {
                             class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                         />
                     </div>
+                    <span class="text-red-700" v-if="errors?.email">
+                        {{ errors?.email[0] }}
+                    </span>
                 </div>
 
                 <div>
@@ -91,6 +95,9 @@ const handleUserLogin = async () => {
                             class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                         />
                     </div>
+                    <span class="text-red-700" v-if="errors?.password">
+                        {{ errors?.password[0] }}
+                    </span>
                 </div>
 
                 <div>
