@@ -6,7 +6,11 @@ import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 
 let posts = reactive([]);
-let postMoreoption = ref(false);
+let postId = ref(null);
+
+const handlePostDropDown = (key = null) => {
+    postId.value = postId.value != null ? null : key;
+};
 
 onMounted(() => {
     axios
@@ -32,6 +36,7 @@ onMounted(() => {
 
             <article
                 v-for="post in posts"
+                :key="post.id"
                 class="bg-white border-2 border-black rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6"
             >
                 <!-- Barta Card Top -->
@@ -59,7 +64,7 @@ onMounted(() => {
                                 </a>
 
                                 <a
-                                    href="{{route('profile.index')}}"
+                                    href=""
                                     class="hover:underline text-sm text-gray-500 line-clamp-1"
                                 >
                                     {{ post.user.email }}
@@ -73,9 +78,7 @@ onMounted(() => {
                             <div class="relative inline-block text-left">
                                 <div>
                                     <button
-                                        @click="
-                                            postMoreoption = !postMoreoption
-                                        "
+                                        @click="handlePostDropDown(post.id)"
                                         type="button"
                                         class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600"
                                         id="menu-0-button"
@@ -97,7 +100,8 @@ onMounted(() => {
                                 </div>
                                 <!-- Dropdown menu -->
                                 <div
-                                    :x-show="postMoreoption"
+                                    v-if="postId == post.id"
+                                    :x-show="true"
                                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                     role="menu"
                                     aria-orientation="vertical"
@@ -105,7 +109,7 @@ onMounted(() => {
                                     tabindex="-1"
                                 >
                                     <a
-                                        href="{{route('post.edit', $post->id)}}"
+                                        href=""
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                         role="menuitem"
                                         tabindex="-1"
@@ -114,7 +118,7 @@ onMounted(() => {
                                     >
                                     <form
                                         method="POST"
-                                        action="{{route('post.destroy', $post->id)}}"
+                                        action=""
                                         class="hover:bg-gray-100"
                                     >
                                         <!-- @csrf @method('delete') -->
