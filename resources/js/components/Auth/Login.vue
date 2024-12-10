@@ -22,6 +22,7 @@ const handleUserLogin = async () => {
             $toast.success(response.data.message);
         })
         .catch(function (error) {
+            $toast.error(error.response.data.message);
             console.log(error);
         });
 };
@@ -104,10 +105,10 @@ const handleUserLogin = async () => {
 
             <p class="mt-10 text-center text-sm text-gray-500">
                 Don't have an account yet?
-                <a
-                    href=""
+                <router-link
+                    to="/register"
                     class="font-semibold leading-6 text-black hover:text-black"
-                    >Sign Up</a
+                    >Sign Up</router-link
                 >
             </p>
         </div>

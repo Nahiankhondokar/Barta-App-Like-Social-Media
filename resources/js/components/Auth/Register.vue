@@ -1,15 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { useToast } from "vue-toast-notification";
 
 const $toast = useToast();
-
 let form = ref({
     name: "",
     username: "",
     email: "",
     password: "",
 });
+let errors = ref({});
 
 const handleUserRegister = async () => {
     const formData = new FormData();
@@ -24,9 +24,12 @@ const handleUserRegister = async () => {
             $toast.success(response.data.message);
         })
         .catch(function (error) {
-            console.log(error);
+            errors.value = error.response.data.errors;
+            console.log(errors.value.email[0])
         });
 };
+
+
 </script>
 
 <template>
@@ -43,7 +46,7 @@ const handleUserRegister = async () => {
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form @submit.prevent="handleUserRegister" class="space-y-6">
+            <form @submit.prevent="handleUserRegister" class="space-y-6" novalidate>
                 <!-- Name -->
                 <div>
                     <label
@@ -62,7 +65,9 @@ const handleUserRegister = async () => {
                             class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                         />
                     </div>
-                    <div class="text-red-700">error message</div>
+                    <span class="text-red-700" v-if="errors.value?.name">
+                        {{errors.value?.name[0]}}
+                    </span>
                 </div>
 
                 <!-- Username -->
@@ -104,7 +109,9 @@ const handleUserRegister = async () => {
                             class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                         />
                     </div>
-                    <div class="text-red-700">error message</div>
+                    <span class="text-red-700" v-if="errors.value?.email">
+                        {{errors.value?.email[0]}}
+                    </span>
                 </div>
 
                 <!-- Password -->
