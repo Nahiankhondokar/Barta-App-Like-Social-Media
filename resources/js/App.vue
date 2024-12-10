@@ -9,9 +9,9 @@ let authUser = ref({
 });
 
 console.log(authUser.value.user);
+provide("test", authUser.value.user);
 
 onMounted(() => {
-    console.log("mounted");
     axios
         .get("api/me")
         .then(function (response) {
@@ -22,11 +22,11 @@ onMounted(() => {
         });
 });
 
-provide("user", authUser.value.user);
+// provide("user", authUser.value.user);
 </script>
 
 <template>
-    <Header></Header>
-    <router-view></router-view>
+    <Header :authUser="authUser"></Header>
+    <router-view :authUser="authUser"></router-view>
     <Footer></Footer>
 </template>

@@ -1,12 +1,17 @@
 <script setup>
-import { inject, ref } from "vue";
+import { inject, provide, ref } from "vue";
 import router from "@/router";
 
 let moreOption = ref(false);
-const authUser = inject("user");
 
-console.log(authUser.value);
+const props = defineProps({
+    authUser: {
+        type: Object,
+    },
+});
 
+const test = inject("test");
+console.log(test);
 const handleUserLogut = () => {
     axios
         .get("api/logout")
@@ -143,7 +148,12 @@ const handleUserLogut = () => {
                                 tabindex="-1"
                             >
                                 <router-link
-                                    :to="{ name: 'Profile', params: { id: 2 } }"
+                                    :to="{
+                                        name: 'Profile',
+                                        params: {
+                                            id: props?.authUser?.user?.id ?? 0,
+                                        },
+                                    }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"
@@ -153,7 +163,9 @@ const handleUserLogut = () => {
                                 <router-link
                                     :to="{
                                         name: 'ProfileEdit',
-                                        params: { id: 2 },
+                                        params: {
+                                            id: props?.authUser?.user?.id ?? 0,
+                                        },
                                     }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
