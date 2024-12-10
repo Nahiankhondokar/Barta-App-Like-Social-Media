@@ -1,24 +1,24 @@
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { inject, ref } from "vue";
+import router from "@/router";
 
 let moreOption = ref(false);
-const authUser = reactive({
-    user: {},
-});
+const authUser = inject("user");
 
-onMounted(() => {
+console.log(authUser.value);
+
+const handleUserLogut = () => {
     axios
-        .get("api/user")
+        .get("api/logout")
         .then(function (response) {
-            console.log(response);
-            authUser.user = response.data;
+            localStorage.removeItem("loggedIn");
+            router.push({ name: "Login" });
+            $toast.success(response.data.message);
         })
         .catch(function (error) {
             console.log(error);
         });
-});
-
-console.log(authUser);
+};
 </script>
 
 <template>
@@ -161,14 +161,15 @@ console.log(authUser);
                                     id="user-menu-item-1"
                                     >Edit Profile</router-link
                                 >
-                                <a
-                                    href=""
+                                <button
+                                    @click="handleUserLogut"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"
                                     id="user-menu-item-2"
-                                    >Sign out</a
                                 >
+                                    Sign out
+                                </button>
                             </div>
                         </div>
                     </div>

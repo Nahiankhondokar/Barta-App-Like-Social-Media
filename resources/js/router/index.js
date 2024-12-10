@@ -49,16 +49,16 @@ const router = createRouter({
     routes
 });
 
-router.beforeEach((to, from, next) => {
-    const isAuthenticated = !!localStorage.getItem('loggedIn');
-    console.log(isAuthenticated)
-    if (to.meta.requiresAuth && !isAuthenticated) {
-      next({ name: 'Login' });
-    } else if (!to.meta.requiresAuth && isAuthenticated) {
-      next({ name: 'Dashboard' });
-    } else {
-      next();
-    }
-  });
+// router.beforeEach((to, from, next) => {
+//     const isAuthenticated = !!localStorage.getItem('loggedIn');
+//     console.log(isAuthenticated)
+//     if (to.meta.requiresAuth && !isAuthenticated) {
+//       next({ name: 'Login' });
+//     } else if (!to.meta.requiresAuth && isAuthenticated) {
+//       next({ name: 'Dashboard' });
+//     } else {
+//       next();
+//     }
+//   });
 
 export default router;
