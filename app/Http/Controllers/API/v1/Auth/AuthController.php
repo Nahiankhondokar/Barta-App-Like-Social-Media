@@ -58,7 +58,6 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         $authUser = auth()->user();
-        dd($authUser);
         return $this->sendApiResponse($authUser , "LoggedIn user");
     }
 }
