@@ -1,17 +1,9 @@
 <script setup>
-import { inject } from "vue";
-import { onMounted, ref } from "vue";
-
-// let authUser = ref({});
-// const props = defineProps({
-//     authUser: {
-//         type: Object,
-//     },
-// });
-
-const authUser = inject('authUser');
-
-console.log(authUser);
+const props = defineProps({
+    authUser: {
+        type: Object,
+    },
+});
 </script>
 
 <template>
@@ -38,9 +30,11 @@ console.log(authUser);
                 <!-- User Meta -->
                 <div>
                     <h1 class="font-bold md:text-2xl">
-                        <!-- {{ props.authUser.user.username }} -->
+                        {{ props.authUser.name }}
                     </h1>
-                    <p class="text-gray-700">username 💻</p>
+                    <p class="text-gray-700">
+                        {{ props.authUser.username }} 💻
+                    </p>
                 </div>
                 <!-- / User Meta -->
             </div>

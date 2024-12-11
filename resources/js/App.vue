@@ -1,30 +1,28 @@
 <script setup>
-import { onMounted, provide, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Footer from "./components/Layouts/Footer.vue";
 import Header from "./components/Layouts/Header.vue";
-import { unAuthenticateUser } from "./Service/unAthenticateUser";
+import {
+    authenticationCheck,
+    unAuthenticateUser,
+} from "./Service/authentication";
 
-let authUser = ref({
-    user: {},
-});
-
-provide("authUser", authUser);
-console.log(authUser.user);
-
+const authUser = ref({});
 onMounted(() => {
-    axios
-    .get("api/me")
-    .then(function (response) {
-        authUser.value.user = response.data.data;
-    })
-    .catch(function (error) {
-        unAuthenticateUser(error.status);
-    });
+    authenticationCheck()
+        .then((response) => {
+            authUser.value = response.data;
+        })
+        .catch((error) => {
+            unAuthenticateUser(error.status);
+        });
 });
+console.log(authUser.value);
+console.log("root call");
 </script>
 
 <template>
-    <Header></Header>
-    <router-view></router-view>
+    <Header :authUser="authUser"></Header>
+    <router-view :authUser="authUser"></router-view>
     <Footer></Footer>
 </template>

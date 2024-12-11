@@ -149,7 +149,7 @@ const handleUserLogut = () => {
                                     :to="{
                                         name: 'Profile',
                                         params: {
-                                            id: props?.authUser?.user?.id ?? 0,
+                                            id: props?.authUser?.id ?? 0,
                                         },
                                     }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -162,7 +162,7 @@ const handleUserLogut = () => {
                                     :to="{
                                         name: 'ProfileEdit',
                                         params: {
-                                            id: props?.authUser?.user?.id ?? 0,
+                                            id: props?.authUser?.id ?? 0,
                                         },
                                     }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
