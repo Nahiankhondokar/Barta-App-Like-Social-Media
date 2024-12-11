@@ -28,6 +28,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        dd($request->all());
         if($request->hasFile('image')){
             $file = $request->file('image');
             $fileName = md5(rand().time()).'.'.$file->extension();

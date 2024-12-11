@@ -4,11 +4,13 @@ import { useToast } from "vue-toast-notification";
 import { useRoute } from "vue-router";
 
 const $toast = useToast();
+
 let form = ref({
     name: "",
     username: "",
     email: "",
     password: "",
+    bio: "",
     image: null,
 });
 let editPost = ref({});
@@ -40,13 +42,13 @@ const handlePostUpdate = async () => {
     }
 
     await axios
-        .put(`/api/post`, formData, {
+        .put(`/api/profile/update/${id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
         })
         .then(function (response) {
-            console.log("created");
+            console.log(response);
             $toast.success(response.data.message);
         })
         .catch(function (error) {
@@ -179,7 +181,7 @@ onMounted(() => {
                                 <div class="mt-2">
                                     <input
                                         id="email"
-                                        v-model="form.email"
+                                        :value="editPost.email"
                                         @input="
                                             (event) =>
                                                 handleInput(event, 'email')
@@ -201,7 +203,6 @@ onMounted(() => {
                                 <div class="mt-2">
                                     <input
                                         type="text"
-                                        v-model="form.password"
                                         @input="
                                             (event) =>
                                                 handleInput(event, 'password')
@@ -227,7 +228,7 @@ onMounted(() => {
                             <div class="mt-2">
                                 <textarea
                                     id="bio"
-                                    v-model="form.bio"
+                                    :value="editPost.bio"
                                     @input="
                                         (event) => handleInput(event, 'bio')
                                     "
