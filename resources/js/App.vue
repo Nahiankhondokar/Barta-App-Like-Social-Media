@@ -8,25 +8,23 @@ let authUser = ref({
     user: {},
 });
 
-console.log(authUser.value.user);
-provide("test", authUser.value.user);
+provide("authUser", authUser);
+console.log(authUser.user);
 
 onMounted(() => {
     axios
-        .get("api/me")
-        .then(function (response) {
-            authUser.value.user = response.data.data;
-        })
-        .catch(function (error) {
-            unAuthenticateUser(error.status);
-        });
+    .get("api/me")
+    .then(function (response) {
+        authUser.value.user = response.data.data;
+    })
+    .catch(function (error) {
+        unAuthenticateUser(error.status);
+    });
 });
-
-// provide("user", authUser.value.user);
 </script>
 
 <template>
-    <Header :authUser="authUser"></Header>
-    <router-view :authUser="authUser"></router-view>
+    <Header></Header>
+    <router-view></router-view>
     <Footer></Footer>
 </template>

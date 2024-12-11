@@ -26,7 +26,7 @@ export const authenticationCheck = ()=> {
             //
         })
         .catch(function (error) {
-            unAuthenticateUser(error.status);
+            // unAuthenticateUser(error.status);
         });
 
         return user;

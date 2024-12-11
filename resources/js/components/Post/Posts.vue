@@ -5,7 +5,9 @@ import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 
-let posts = reactive([]);
+let usePosts = reactive({
+    posts : []
+});
 let postId = ref(null);
 
 const handlePostDropDown = (key = null) => {
@@ -16,7 +18,7 @@ onMounted(() => {
     axios
         .get("api/post")
         .then(function (response) {
-            posts.push(...response.data);
+            usePosts.posts = response.data;
         })
         .catch(function (error) {
             console.log(error);
@@ -35,7 +37,7 @@ onMounted(() => {
             <!-- Barta Card -->
 
             <article
-                v-for="post in posts"
+                v-for="post in usePosts.posts"
                 :key="post.id"
                 class="bg-white border-2 border-black rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6"
             >
@@ -204,7 +206,7 @@ onMounted(() => {
             </article>
 
             <article
-                v-if="posts.length < 1"
+                v-if="usePosts.posts.length < 1"
                 class="bg-white border-2 border-red-900 rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6"
             >
                 <!-- Barta Card Top -->

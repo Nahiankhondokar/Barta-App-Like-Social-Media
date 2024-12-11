@@ -10,8 +10,6 @@ const props = defineProps({
     },
 });
 
-const test = inject("test");
-console.log(test);
 const handleUserLogut = () => {
     axios
         .get("api/logout")
