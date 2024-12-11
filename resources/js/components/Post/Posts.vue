@@ -6,7 +6,7 @@ import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 
 let usePosts = reactive({
-    posts : []
+    posts: [],
 });
 let postId = ref(null);
 
@@ -16,14 +16,16 @@ const handlePostDropDown = (key = null) => {
 
 onMounted(() => {
     axios
-        .get("api/post")
+        .get("/api/post")
         .then(function (response) {
-            usePosts.posts = response.data;
+            usePosts.posts = response.data.data;
         })
         .catch(function (error) {
             console.log(error);
         });
 });
+
+console.log(usePosts.posts);
 </script>
 
 <template>

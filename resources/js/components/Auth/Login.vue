@@ -16,7 +16,7 @@ const handleUserLogin = async () => {
     formData.append("password", form.value.password);
 
     await axios
-        .post("api/login", formData)
+        .post("/api/login", formData)
         .then(function (response) {
             localStorage.setItem("loggedIn", "true");
             router.push({ name: "Dashboard" });

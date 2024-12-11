@@ -24,7 +24,7 @@ const handlePostSubmit = async () => {
     }
 
     await axios
-        .post("api/post", formData, {
+        .post("/api/post", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

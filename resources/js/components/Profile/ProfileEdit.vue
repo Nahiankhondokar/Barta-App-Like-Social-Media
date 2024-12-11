@@ -1,55 +1,69 @@
 <script setup>
-// import { onMounted, ref } from "vue";
-// import { toast } from "vue3-toastify";
-// import ImageShow from "../ImageShow/ImageShow.vue";
+import { onMounted, ref } from "vue";
+import { useToast } from "vue-toast-notification";
+import { useRoute } from "vue-router";
 
-// const authUser = ref({});
-// let form = ref({
-//     barta: "",
-//     image: null,
-// });
+const $toast = useToast();
+let form = ref({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    image: null,
+});
+let editPost = ref({});
 
-// function handleImageUpload(e) {
-//     let file = event.target.files[0];
-//     if (file) {
-//         form.value.image = file;
-//     }
-// }
+const route = useRoute();
+const id = route.params.id;
 
-// const handlePostSubmit = async () => {
-//     const formData = new FormData();
-//     formData.append("barta", form.value.barta);
-//     if (form.value.image) {
-//         formData.append("image", form.value.image);
-//     }
+function handleImageUpload(e) {
+    let file = event.target.files[0];
+    if (file) {
+        form.value.image = file;
+    }
+}
 
-//     await axios
-//         .post("post", formData, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             },
-//         })
-//         .then(function (response) {
-//             console.log("created");
-//             toast("Post Created Successfully !", {
-//                 autoClose: 1000,
-//             });
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// };
+function handleInput(event, field) {
+    form.value[field] = event.target.value;
+}
 
-// onMounted(() => {
-//     axios
-//         .get("me")
-//         .then(function (response) {
-//             authUser.value = response.data;
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// });
+const handlePostUpdate = async () => {
+    const formData = new FormData();
+    formData.append("name", form.value.name);
+    formData.append("username", form.value.username);
+    formData.append("email", form.value.email);
+    formData.append("bio", form.value.bio);
+    formData.append("password", form.value.password);
+
+    if (form.value.image) {
+        formData.append("image", form.value.image);
+    }
+
+    await axios
+        .put(`/api/post`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        .then(function (response) {
+            console.log("created");
+            $toast.success(response.data.message);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+onMounted(() => {
+    axios
+        .get(`/api/profile/edit/${id}`)
+        .then(function (response) {
+            editPost.value = response.data.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
 </script>
 
 <template>
@@ -58,8 +72,7 @@
     >
         <!-- Profile Edit Form -->
 
-        <form method="POST" action="" enctype="multipart/form-data">
-            @csrf @method('put')
+        <form @submit.prevent="handlePostUpdate">
             <div class="space-y-12">
                 <div class="border-b border-gray-900/10 pb-12">
                     <h2 class="text-xl font-semibold leading-7 text-gray-900">
@@ -81,8 +94,8 @@
                                 <input
                                     class="hidden"
                                     type="file"
-                                    name="image"
                                     id="avatar"
+                                    @change="handleImageUpload()"
                                 />
                                 <!-- Uncomment this image tag if required -->
                                 <img
@@ -124,10 +137,13 @@
                                 <div class="mt-2">
                                     <input
                                         type="text"
-                                        name="name"
                                         id="first-name"
                                         autocomplete="given-name"
-                                        value=""
+                                        :value="editPost.name"
+                                        @input="
+                                            (event) =>
+                                                handleInput(event, 'name')
+                                        "
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -142,9 +158,12 @@
                                 <div class="mt-2">
                                     <input
                                         type="text"
-                                        name="username"
                                         id="last-name"
-                                        value=""
+                                        :value="editPost.username"
+                                        @input="
+                                            (event) =>
+                                                handleInput(event, 'username')
+                                        "
                                         autocomplete="family-name"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
@@ -160,7 +179,11 @@
                                 <div class="mt-2">
                                     <input
                                         id="email"
-                                        name="email"
+                                        v-model="form.email"
+                                        @input="
+                                            (event) =>
+                                                handleInput(event, 'email')
+                                        "
                                         type="email"
                                         autocomplete="email"
                                         value=""
@@ -178,7 +201,11 @@
                                 <div class="mt-2">
                                     <input
                                         type="text"
-                                        name="password"
+                                        v-model="form.password"
+                                        @input="
+                                            (event) =>
+                                                handleInput(event, 'password')
+                                        "
                                         id="password"
                                         autocomplete="password"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
@@ -200,11 +227,14 @@
                             <div class="mt-2">
                                 <textarea
                                     id="bio"
-                                    name="bio"
+                                    v-model="form.bio"
+                                    @input="
+                                        (event) => handleInput(event, 'bio')
+                                    "
                                     rows="3"
                                     class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                 >
-                bio</textarea
+                                    bio</textarea
                                 >
                             </div>
                             <p class="mt-3 text-sm leading-6 text-gray-600">

@@ -12,7 +12,7 @@ const props = defineProps({
 
 const handleUserLogut = () => {
     axios
-        .get("api/logout")
+        .get("/api/logout")
         .then(function (response) {
             localStorage.removeItem("loggedIn");
             router.push({ name: "Login" });
@@ -35,7 +35,7 @@ const handleUserLogut = () => {
                 <div class="flex h-16 justify-between">
                     <div class="flex">
                         <div class="flex flex-shrink-0 items-center">
-                            <router-link to="/dashboard">
+                            <router-link to="/">
                                 <h2 class="font-bold text-2xl">Barta</h2>
                             </router-link>
                         </div>

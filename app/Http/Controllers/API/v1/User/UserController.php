@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\v1\User;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\User;
+use App\Traits\sendApiResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,18 +13,20 @@ use Illuminate\View\View;
 
 class UserController extends Controller
 {
-    public function index(): View
+    use sendApiResponse;
+    
+    public function index()
     {
         $user = auth()->user();
-        return view('profile.index', compact('user'));
+        return $this->sendApiResponse($user, 'User details');
     }
 
-    public function create(User $user): View
+    public function create(User $user)
     {
-        return view('profile.edit', compact('user'));
+        return $this->sendApiResponse($user, 'User created');
     }
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request, $id)
     {
         if($request->hasFile('image')){
             $file = $request->file('image');
@@ -44,10 +47,10 @@ class UserController extends Controller
             $user->update();
         }
 
-        return redirect()->route('profile.index')->with('success', 'Profile updated');
+        return $this->sendApiResponse($user, 'User updated');
     }
 
-    public function search(Request $request): View
+    public function search(Request $request)
     {
         $posts = Post::query()
         ->whereHas('user', function($q) use ($request){
@@ -56,6 +59,6 @@ class UserController extends Controller
         ->orWhereFullText(['barta'], $request->search)
         ->get();
 
-        return view('post.post-search', compact('posts'));
+        return $this->sendApiResponse($posts, 'Search result');
     }
 }

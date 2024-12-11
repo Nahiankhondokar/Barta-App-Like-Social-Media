@@ -19,7 +19,7 @@ const handleUserRegister = async () => {
     formData.append("password", form.value.password);
 
     await axios
-        .post("api/register", formData)
+        .post("/api/register", formData)
         .then(function (response) {
             $toast.success(response.data.message);
         })

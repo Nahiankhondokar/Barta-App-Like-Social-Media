@@ -7,7 +7,7 @@ export const unAuthenticateUser = (statusCode) => {
         router.push({ name: "Login" });
 
         axios
-        .get("api/logout")
+        .get("/api/logout")
         .then(function (response) {
         //
         })
@@ -20,7 +20,7 @@ export const unAuthenticateUser = (statusCode) => {
 
 export const authenticationCheck = async ()=> {
     return await axios
-        .get("api/me")
+        .get("/api/me")
         .then((response)=> response.data)
         .catch(function (error) {
             unAuthenticateUser(error.status);
