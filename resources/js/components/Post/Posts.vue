@@ -5,17 +5,45 @@ import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 import { getAllPost } from "../../Service/post";
+import { useToast } from "vue-toast-notification";
+import router from "@/router";
+import { authenticationCheck } from "../../Service/authentication";
+
+const props = defineProps({
+    authUser : {
+        type : Object
+    }
+});
+
+console.log(props.authUser.id)
 
 let usePosts = reactive({
     posts: [],
 });
 let postId = ref(null);
+const $toast = useToast();
 
 const handlePostDropDown = (key = null) => {
     postId.value = postId.value != null ? null : key;
 };
 
-onMounted(() => {
+const handlePostDelete = async (id) => {
+    const formData = new FormData();
+    formData.append("_method", "DELETE");
+
+    await axios
+        .delete(`/api/post/${id}`)
+        .then(function (response) {
+            $toast.success(response.data.message);
+
+           showAllPost();
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+const showAllPost = ()=>{
     getAllPost()
         .then((response) => {
             usePosts.posts = response;
@@ -23,6 +51,11 @@ onMounted(() => {
         .catch((error) => {
             console.log(error);
         });
+}
+
+onMounted(() => {
+    showAllPost();
+    authenticationCheck();
 });
 </script>
 
@@ -47,7 +80,7 @@ onMounted(() => {
                         <div class="flex items-center space-x-3">
                             <!-- User Avatar -->
                             <div class="flex-shrink-0">
-                                <ImageShow
+                                <ImageShow 
                                     :ïmage="post.user.image"
                                     css="h-10 w-10 rounded-full object-cover"
                                 />
@@ -79,7 +112,9 @@ onMounted(() => {
                         <div class="flex flex-shrink-0 self-center">
                             <div class="relative inline-block text-left">
                                 <div>
+
                                     <button
+                                        v-if="post.user.id == props.authUser.id"
                                         @click="handlePostDropDown(post.id)"
                                         type="button"
                                         class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600"
@@ -99,6 +134,7 @@ onMounted(() => {
                                             ></path>
                                         </svg>
                                     </button>
+
                                 </div>
                                 <!-- Dropdown menu -->
                                 <div
@@ -123,12 +159,10 @@ onMounted(() => {
                                         id="user-menu-item-0"
                                         >Edit</router-link
                                     >
-                                    <form
-                                        method="POST"
-                                        action=""
+                                    <form @submit.prevent="handlePostDelete(post.id)"
                                         class="hover:bg-gray-100"
                                     >
-                                        <!-- @csrf @method('delete') -->
+                                       
                                         <button
                                             type="submit"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
