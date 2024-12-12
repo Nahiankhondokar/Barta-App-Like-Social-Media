@@ -6,7 +6,7 @@ import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
 import { unAuthenticateUser } from "../../Service/authentication";
 
 const $toast = useToast();
-let editPost = ref({});
+let editProfile = ref({});
 let imageUrl = ref(null);
 const baseUrl = "http://127.0.0.1:8000/";
 
@@ -14,26 +14,26 @@ const route = useRoute();
 const id = route.params.id;
 
 function handleImageUpload(e) {
-    editPost.value.image = "";
+    editProfile.value.image = "";
     let file = event.target.files[0];
     imageUrl.value = URL.createObjectURL(file);
     URL.revokeObjectURL(file); // security perpouse
 
     if (file) {
-        editPost.value.image = file;
+        editProfile.value.image = file;
     }
 }
 
-const handlePostUpdate = async () => {
+const handleProfileUpdate = async () => {
     const formData = new FormData();
-    formData.append("name", editPost.value.name);
-    formData.append("username", editPost.value.username);
-    formData.append("email", editPost.value.email);
-    formData.append("bio", editPost.value.bio);
-    formData.append("password", editPost.value.password);
+    formData.append("name", editProfile.value.name);
+    formData.append("username", editProfile.value.username);
+    formData.append("email", editProfile.value.email);
+    formData.append("bio", editProfile.value.bio);
+    formData.append("password", editProfile.value.password);
 
-    if (editPost.value.image) {
-        formData.append("image", editPost.value.image);
+    if (editProfile.value.image) {
+        formData.append("image", editProfile.value.image);
     }
 
     await axios
@@ -56,8 +56,8 @@ const getUserProfile = () => {
     axios
         .get(`/api/profile/edit/${id}`)
         .then(function (response) {
-            editPost.value = response.data.data;
-            editPost.value.password = "";
+            editProfile.value = response.data.data;
+            editProfile.value.password = "";
         })
         .catch(function (error) {
             unAuthenticateUser(error.status);
@@ -76,7 +76,7 @@ onMounted(() => {
     >
         <!-- Profile Edit Form -->
 
-        <form @submit.prevent="handlePostUpdate">
+        <form @submit.prevent="handleProfileUpdate">
             <div class="space-y-12">
                 <div class="border-b border-gray-900/10 pb-12">
                     <h2 class="text-xl font-semibold leading-7 text-gray-900">
@@ -103,7 +103,9 @@ onMounted(() => {
                                 />
                                 <!-- Uncomment this image tag if required -->
                                 <img
-                                    :src="baseUrl + editPost.image ?? NoImage"
+                                    :src="
+                                        baseUrl + editProfile.image ?? NoImage
+                                    "
                                     class="h-10 w-10 rounded-full object-cover"
                                     alt=""
                                 />
@@ -137,7 +139,7 @@ onMounted(() => {
                                         type="text"
                                         id="first-name"
                                         autocomplete="given-name"
-                                        :value="editPost.name"
+                                        :value="editProfile.name"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -153,7 +155,7 @@ onMounted(() => {
                                     <input
                                         type="text"
                                         id="last-name"
-                                        v-model="editPost.username"
+                                        v-model="editProfile.username"
                                         autocomplete="family-name"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
@@ -169,7 +171,7 @@ onMounted(() => {
                                 <div class="mt-2">
                                     <input
                                         id="email"
-                                        v-model="editPost.email"
+                                        v-model="editProfile.email"
                                         type="email"
                                         autocomplete="email"
                                         value=""
@@ -188,7 +190,7 @@ onMounted(() => {
                                     <input
                                         type="text"
                                         id="password"
-                                        v-model="editPost.password"
+                                        v-model="editProfile.password"
                                         autocomplete="password"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
@@ -209,7 +211,7 @@ onMounted(() => {
                             <div class="mt-2">
                                 <textarea
                                     id="bio"
-                                    v-model="editPost.bio"
+                                    v-model="editProfile.bio"
                                     rows="3"
                                     class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                 >

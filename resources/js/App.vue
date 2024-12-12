@@ -17,8 +17,6 @@ onMounted(() => {
             unAuthenticateUser(error.status);
         });
 });
-console.log(authUser.value);
-console.log("root call");
 </script>
 
 <template>

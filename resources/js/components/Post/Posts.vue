@@ -110,13 +110,18 @@ onMounted(() => {
                                     aria-labelledby="user-menu-button"
                                     tabindex="-1"
                                 >
-                                    <a
-                                        href=""
+                                    <router-link
+                                        :to="{
+                                            name: 'PostEdit',
+                                            params: {
+                                                id: post.id,
+                                            },
+                                        }"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                         role="menuitem"
                                         tabindex="-1"
                                         id="user-menu-item-0"
-                                        >Edit</a
+                                        >Edit</router-link
                                     >
                                     <form
                                         method="POST"
@@ -143,7 +148,7 @@ onMounted(() => {
 
                 <!-- Content -->
                 <div class="py-4 text-gray-700 font-normal">
-                    <a href="{{route('post.show', post.id)}}">
+                    <router-link to="">
                         <p>
                             {{ post.barta }}
                             <br />
@@ -154,7 +159,7 @@ onMounted(() => {
                             <br />
                             <br />
                         </p>
-                    </a>
+                    </router-link>
 
                     <ImageShow :ïmage="post.image" css="" />
                 </div>

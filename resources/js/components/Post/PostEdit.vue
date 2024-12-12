@@ -1,55 +1,68 @@
 <script setup>
-// import { onMounted, ref } from "vue";
-// import { toast } from "vue3-toastify";
-// import ImageShow from "../ImageShow/ImageShow.vue";
+import axios from "axios";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
+import { useToast } from "vue-toast-notification";
+import router from "@/router";
 
-// const authUser = ref({});
-// let form = ref({
-//     barta: "",
-//     image: null,
-// });
+const $toast = useToast();
+const editPost = ref({});
+let imageUrl = ref(null);
+const baseUrl = "http://127.0.0.1:8000/";
+const { params } = useRoute();
+const id = params.id;
 
-// function handleImageUpload(e) {
-//     let file = event.target.files[0];
-//     if (file) {
-//         form.value.image = file;
-//     }
-// }
+function handleImageUpload(e) {
+    editPost.value.image = "";
+    let file = event.target.files[0];
+    imageUrl.value = URL.createObjectURL(file);
+    URL.revokeObjectURL(file); // security perpouse
 
-// const handlePostSubmit = async () => {
-//     const formData = new FormData();
-//     formData.append("barta", form.value.barta);
-//     if (form.value.image) {
-//         formData.append("image", form.value.image);
-//     }
+    if (file) {
+        editPost.value.image = file;
+    }
+}
 
-//     await axios
-//         .post("post", formData, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             },
-//         })
-//         .then(function (response) {
-//             console.log("created");
-//             toast("Post Created Successfully !", {
-//                 autoClose: 1000,
-//             });
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// };
+const handlePostUpdate = async () => {
+    const formData = new FormData();
+    formData.append("barta", editPost.value.barta);
+    formData.append("_method", "PUT");
 
-// onMounted(() => {
-//     axios
-//         .get("me")
-//         .then(function (response) {
-//             authUser.value = response.data;
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// });
+    if (editPost.value.image) {
+        formData.append("image", editPost.value.image);
+    }
+
+    await axios
+        .put(`/api/post/${id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        .then(function (response) {
+            imageUrl.value = null;
+            $toast.success(response.data.message);
+            router.push({ name: "Posts" });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+const getSinglePost = (id) => {
+    axios
+        .get(`/api/post/${id}/edit`)
+        .then(function (response) {
+            editPost.value = response.data.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+onMounted(() => {
+    getSinglePost(id);
+});
 </script>
 
 <template>
@@ -58,8 +71,7 @@
     >
         <!-- Profile Edit Form -->
 
-        <form method="POST" action="">
-            @csrf @method('put')
+        <form @submit.prevent="handlePostUpdate">
             <div class="space-y-12">
                 <div class="border-b border-gray-900/10 pb-12">
                     <h2 class="text-xl font-semibold leading-7 text-gray-900">
@@ -82,25 +94,20 @@
                                 type="file"
                                 name="image"
                                 id="avatar"
+                                @change="handleImageUpload"
                             />
                             <!-- Uncomment this image tag if required -->
                             <img
-                                class="h-24 w-36 rounded-small"
-                                src=""
-                                alt="Ahmed Shamim Hasan Shaon"
+                                :src="baseUrl + editPost.image ?? NoImage"
+                                class="h-10 w-10 rounded-full object-cover"
+                                alt="main"
                             />
-                            <svg
-                                class="h-12 w-12 text-gray-300"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
+                            <!-- preview image -->
+                            <img
+                                :src="imageUrl ?? NoImage"
+                                class="h-10 w-10 rounded-full object-cover"
+                                alt="preview"
+                            />
                             <label for="avatar">
                                 <div
                                     class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
@@ -123,13 +130,12 @@
                             <div class="mt-2">
                                 <textarea
                                     id="bio"
-                                    name="barta"
+                                    v-model="editPost.barta"
                                     rows="3"
                                     class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                 >
-              barta
-               </textarea
-                                >
+                                {{ editPost.barta }}
+                                </textarea>
                             </div>
                         </div>
                     </div>

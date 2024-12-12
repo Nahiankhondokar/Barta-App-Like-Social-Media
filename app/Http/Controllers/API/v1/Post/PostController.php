@@ -62,8 +62,9 @@ class PostController extends Controller
         return $this->sendApiResponse($post, "Post edit");
     }
 
-    public function update(PostUpdateRequest $request, Post $post)
+    public function update(Request $request, Post $post)
     {
+        dd($request->all());
         if(auth()->user()->id != $post->user_id){
             return $this->sendApiResponse('', 'Invalid user!');
         }

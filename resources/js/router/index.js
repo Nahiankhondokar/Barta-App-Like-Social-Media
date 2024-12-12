@@ -5,6 +5,7 @@ import ProfileView from "../components/Profile/ProfileView.vue";
 import ProfileEdit from "../components/Profile/ProfileEdit.vue";
 import Register from "../components/Auth/Register.vue";
 import Login from "../components/Auth/Login.vue";
+import PostEdit from "../components/Post/PostEdit.vue";
 
 const routes = [
     {
@@ -35,6 +36,12 @@ const routes = [
         path: '/profile-edit/:id',
         name : "ProfileEdit",
         component: ProfileEdit,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/post-edit/:id',
+        name : "PostEdit",
+        component: PostEdit,
         meta: { requiresAuth: true }
     },
     {
