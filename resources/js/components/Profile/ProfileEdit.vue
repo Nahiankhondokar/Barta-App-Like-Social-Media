@@ -4,6 +4,7 @@ import { useToast } from "vue-toast-notification";
 import { useRoute } from "vue-router";
 import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
 import { unAuthenticateUser } from "../../Service/authentication";
+import router from "@/router";
 
 const $toast = useToast();
 let editProfile = ref({});
@@ -46,6 +47,7 @@ const handleProfileUpdate = async () => {
             getUserProfile();
             imageUrl.value = null;
             $toast.success(response.data.message);
+            router.push({ name: "Dashboard" });
         })
         .catch(function (error) {
             console.log(error);
@@ -139,7 +141,7 @@ onMounted(() => {
                                         type="text"
                                         id="first-name"
                                         autocomplete="given-name"
-                                        :value="editProfile.name"
+                                        v-model="editProfile.name"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>

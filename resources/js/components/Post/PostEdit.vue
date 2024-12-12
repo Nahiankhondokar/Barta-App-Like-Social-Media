@@ -26,15 +26,15 @@ function handleImageUpload(e) {
 
 const handlePostUpdate = async () => {
     const formData = new FormData();
-    formData.append("barta", editPost.value.barta);
     formData.append("_method", "PUT");
+    formData.append("barta", editPost.value.barta);
 
     if (editPost.value.image) {
         formData.append("image", editPost.value.image);
     }
 
     await axios
-        .put(`/api/post/${id}`, formData, {
+        .post(`/api/post/${id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -42,7 +42,7 @@ const handlePostUpdate = async () => {
         .then(function (response) {
             imageUrl.value = null;
             $toast.success(response.data.message);
-            router.push({ name: "Posts" });
+            router.push({ name: "Dashboard" });
         })
         .catch(function (error) {
             console.log(error);
