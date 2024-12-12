@@ -2,53 +2,49 @@
 import { onMounted, ref } from "vue";
 import { useToast } from "vue-toast-notification";
 import { useRoute } from "vue-router";
+import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
+import { unAuthenticateUser } from "../../Service/authentication";
 
 const $toast = useToast();
-
-let form = ref({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-    bio: "",
-    image: null,
-});
 let editPost = ref({});
+let imageUrl = ref(null);
+const baseUrl = "http://127.0.0.1:8000/";
 
 const route = useRoute();
 const id = route.params.id;
 
 function handleImageUpload(e) {
+    editPost.value.image = "";
     let file = event.target.files[0];
-    if (file) {
-        form.value.image = file;
-    }
-}
+    imageUrl.value = URL.createObjectURL(file);
+    URL.revokeObjectURL(file); // security perpouse
 
-function handleInput(event, field) {
-    form.value[field] = event.target.value;
+    if (file) {
+        editPost.value.image = file;
+    }
 }
 
 const handlePostUpdate = async () => {
     const formData = new FormData();
-    formData.append("name", form.value.name);
-    formData.append("username", form.value.username);
-    formData.append("email", form.value.email);
-    formData.append("bio", form.value.bio);
-    formData.append("password", form.value.password);
+    formData.append("name", editPost.value.name);
+    formData.append("username", editPost.value.username);
+    formData.append("email", editPost.value.email);
+    formData.append("bio", editPost.value.bio);
+    formData.append("password", editPost.value.password);
 
-    if (form.value.image) {
-        formData.append("image", form.value.image);
+    if (editPost.value.image) {
+        formData.append("image", editPost.value.image);
     }
 
     await axios
-        .put(`/api/profile/update/${id}`, formData, {
+        .post(`/api/profile/update/${id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
         })
         .then(function (response) {
-            console.log(response);
+            getUserProfile();
+            imageUrl.value = null;
             $toast.success(response.data.message);
         })
         .catch(function (error) {
@@ -56,15 +52,21 @@ const handlePostUpdate = async () => {
         });
 };
 
-onMounted(() => {
+const getUserProfile = () => {
     axios
         .get(`/api/profile/edit/${id}`)
         .then(function (response) {
             editPost.value = response.data.data;
+            editPost.value.password = "";
         })
         .catch(function (error) {
-            console.log(error);
+            unAuthenticateUser(error.status);
+            $toast.warning("Please login again");
         });
+};
+
+onMounted(() => {
+    getUserProfile();
 });
 </script>
 
@@ -101,22 +103,16 @@ onMounted(() => {
                                 />
                                 <!-- Uncomment this image tag if required -->
                                 <img
-                                    class="h-12 w-12 rounded-full"
-                                    src=""
-                                    alt="Ahmed Shamim Hasan Shaon"
+                                    :src="baseUrl + editPost.image ?? NoImage"
+                                    class="h-10 w-10 rounded-full object-cover"
+                                    alt=""
                                 />
-                                <svg
-                                    class="h-12 w-12 text-gray-300"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    aria-hidden="true"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
-                                        clip-rule="evenodd"
-                                    />
-                                </svg>
+                                <!-- preview image -->
+                                <img
+                                    :src="imageUrl ?? NoImage"
+                                    class="h-10 w-10 rounded-full object-cover"
+                                    alt=""
+                                />
                                 <label for="avatar">
                                     <div
                                         class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
@@ -142,10 +138,6 @@ onMounted(() => {
                                         id="first-name"
                                         autocomplete="given-name"
                                         :value="editPost.name"
-                                        @input="
-                                            (event) =>
-                                                handleInput(event, 'name')
-                                        "
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
                                 </div>
@@ -161,11 +153,7 @@ onMounted(() => {
                                     <input
                                         type="text"
                                         id="last-name"
-                                        :value="editPost.username"
-                                        @input="
-                                            (event) =>
-                                                handleInput(event, 'username')
-                                        "
+                                        v-model="editPost.username"
                                         autocomplete="family-name"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
@@ -181,11 +169,7 @@ onMounted(() => {
                                 <div class="mt-2">
                                     <input
                                         id="email"
-                                        :value="editPost.email"
-                                        @input="
-                                            (event) =>
-                                                handleInput(event, 'email')
-                                        "
+                                        v-model="editPost.email"
                                         type="email"
                                         autocomplete="email"
                                         value=""
@@ -203,11 +187,8 @@ onMounted(() => {
                                 <div class="mt-2">
                                     <input
                                         type="text"
-                                        @input="
-                                            (event) =>
-                                                handleInput(event, 'password')
-                                        "
                                         id="password"
+                                        v-model="editPost.password"
                                         autocomplete="password"
                                         class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                     />
@@ -228,10 +209,7 @@ onMounted(() => {
                             <div class="mt-2">
                                 <textarea
                                     id="bio"
-                                    :value="editPost.bio"
-                                    @input="
-                                        (event) => handleInput(event, 'bio')
-                                    "
+                                    v-model="editPost.bio"
                                     rows="3"
                                     class="block w-full rounded-md border-0 p-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                                 >

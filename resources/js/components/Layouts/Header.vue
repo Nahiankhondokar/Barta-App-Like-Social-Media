@@ -1,6 +1,7 @@
 <script setup>
 import { inject, provide, ref } from "vue";
 import router from "@/router";
+import ImageShow from "../ImageShow/ImageShow.vue";
 
 let moreOption = ref(false);
 
@@ -127,10 +128,9 @@ const handleUserLogut = () => {
                                     aria-haspopup="true"
                                 >
                                     <span class="sr-only">Open user menu</span>
-                                    <img
-                                        class="h-8 w-8 rounded-full"
-                                        src=""
-                                        alt="username"
+                                    <ImageShow
+                                        :ïmage="props?.authUser.image"
+                                        css="h-12 w-12 rounded-full"
                                     />
                                 </button>
                             </div>

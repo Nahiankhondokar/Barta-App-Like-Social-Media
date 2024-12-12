@@ -2,8 +2,11 @@
 import { onMounted, ref } from "vue";
 import { toast } from "vue3-toastify";
 import ImageShow from "../ImageShow/ImageShow.vue";
+import { getAllPost } from "../../Service/post";
+import { useToast } from "vue-toast-notification";
 
 const authUser = ref({});
+const $toast = useToast();
 let form = ref({
     barta: "",
     image: null,
@@ -30,10 +33,9 @@ const handlePostSubmit = async () => {
             },
         })
         .then(function (response) {
-            console.log("created");
-            toast("Post Created Successfully !", {
-                autoClose: 1000,
-            });
+            $toast.success(response.data.message);
+
+            getAllPost();
         })
         .catch(function (error) {
             console.log(error);

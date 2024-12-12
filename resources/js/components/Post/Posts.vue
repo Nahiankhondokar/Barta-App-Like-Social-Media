@@ -4,6 +4,7 @@ import { onMounted, reactive, ref } from "vue";
 import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
+import { getAllPost } from "../../Service/post";
 
 let usePosts = reactive({
     posts: [],
@@ -15,17 +16,14 @@ const handlePostDropDown = (key = null) => {
 };
 
 onMounted(() => {
-    axios
-        .get("/api/post")
-        .then(function (response) {
-            usePosts.posts = response.data.data;
+    getAllPost()
+        .then((response) => {
+            usePosts.posts = response;
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.log(error);
         });
 });
-
-console.log(usePosts.posts);
 </script>
 
 <template>

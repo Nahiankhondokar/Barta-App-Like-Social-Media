@@ -21,21 +21,19 @@ class UserController extends Controller
         return $this->sendApiResponse($user, 'User details');
     }
 
-    public function create(User $user)
+    public function edit(User $user)
     {
-        return $this->sendApiResponse($user, 'User created');
+        return $this->sendApiResponse($user, 'Edit user');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        dd($request->all());
         if($request->hasFile('image')){
             $file = $request->file('image');
             $fileName = md5(rand().time()).'.'.$file->extension();
             $pathWithFile = 'storage/'.$file->storePubliclyAs('profile', $fileName, 'public');
         }
 
-        $user = User::query()->find($id);
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->bio      = $request->bio;
@@ -43,7 +41,7 @@ class UserController extends Controller
         $user->image    = $pathWithFile ?? null;
         $user->update();
 
-        if($request->password){
+        if(!empty($request->password)){
             $user->password  = Hash::make($request->password);
             $user->update();
         }
