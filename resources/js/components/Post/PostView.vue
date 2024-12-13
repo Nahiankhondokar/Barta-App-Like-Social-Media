@@ -1,55 +1,52 @@
 <script setup>
-// import { onMounted, ref } from "vue";
-// import { toast } from "vue3-toastify";
-// import ImageShow from "../ImageShow/ImageShow.vue";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import ImageShow from "../ImageShow/ImageShow.vue";
+import moment from "moment";
+import { useToast } from "vue-toast-notification";
+import router from "@/router";
 
-// const authUser = ref({});
-// let form = ref({
-//     barta: "",
-//     image: null,
-// });
+const route = useRoute();
+const id = route.params.id;
+let viewPost = ref({});
+let postId = ref(null);
+const $toast = useToast();
 
-// function handleImageUpload(e) {
-//     let file = event.target.files[0];
-//     if (file) {
-//         form.value.image = file;
-//     }
-// }
+const handlePostDropDown = (key = null) => {
+    postId.value = postId.value != null ? null : key;
+};
 
-// const handlePostSubmit = async () => {
-//     const formData = new FormData();
-//     formData.append("barta", form.value.barta);
-//     if (form.value.image) {
-//         formData.append("image", form.value.image);
-//     }
+const props = defineProps({
+    authUser : {
+        type : Object
+    }
+});
 
-//     await axios
-//         .post("post", formData, {
-//             headers: {
-//                 "Content-Type": "multipart/form-data",
-//             },
-//         })
-//         .then(function (response) {
-//             console.log("created");
-//             toast("Post Created Successfully !", {
-//                 autoClose: 1000,
-//             });
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// };
+const handlePostDelete = async (id) => {
+    const formData = new FormData();
+    formData.append("_method", "DELETE");
 
-// onMounted(() => {
-//     axios
-//         .get("me")
-//         .then(function (response) {
-//             authUser.value = response.data;
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// });
+    await axios
+        .delete(`/api/post/${id}`)
+        .then(function (response) {
+            $toast.success(response.data.message);
+            router.push({name: "Dashboard"});
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+onMounted(() => {
+    axios
+        .get("/api/post/"+id)
+        .then(function (response) {
+            viewPost.value = response.data.data;
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
 </script>
 
 <template>
@@ -67,10 +64,9 @@
                         <div class="flex items-center space-x-3">
                             <!-- User Avatar -->
                             <div class="flex-shrink-0">
-                                <img
-                                    class="h-10 w-10 rounded-full object-cover"
-                                    src=""
-                                    alt="username"
+                                <ImageShow
+                                    :ïmage="props?.authUser.image"
+                                    css="h-12 w-12 rounded-full"
                                 />
                             </div>
                             <!-- /User Avatar -->
@@ -80,32 +76,30 @@
                                 class="text-gray-900 flex flex-col min-w-0 flex-1"
                             >
                                 <a
-                                    href="{{route('profile.index')}}"
+                                    href=""
                                     class="hover:underline font-semibold line-clamp-1"
                                 >
-                                    username
+                                    {{ viewPost?.user?.name }}
                                 </a>
 
                                 <a
-                                    href="{{route('profile.index')}}"
+                                    href=""
                                     class="hover:underline text-sm text-gray-500 line-clamp-1"
                                 >
-                                    email
+                                {{ viewPost?.user?.email }}
                                 </a>
                             </div>
                             <!-- /User Info -->
                         </div>
 
-                        @if(auth()->user()->id == $post->user_id)
                         <!-- Card Action Dropdown -->
-                        <div
-                            class="flex flex-shrink-0 self-center"
-                            x-data="{ open: false }"
-                        >
+                        <div class="flex flex-shrink-0 self-center" v-if="viewPost.user_id == props.authUser.id" >
                             <div class="relative inline-block text-left">
                                 <div>
+
                                     <button
-                                        @click="open = !open"
+                                        
+                                        @click="handlePostDropDown(viewPost.id)"
                                         type="button"
                                         class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600"
                                         id="menu-0-button"
@@ -124,39 +118,50 @@
                                             ></path>
                                         </svg>
                                     </button>
+
                                 </div>
                                 <!-- Dropdown menu -->
-
                                 <div
-                                    x-show="open"
-                                    @click.away="open = false"
+                                    v-if="postId == viewPost.id"
+                                    :x-show="true"
                                     class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                                     role="menu"
                                     aria-orientation="vertical"
                                     aria-labelledby="user-menu-button"
                                     tabindex="-1"
                                 >
-                                    <a
-                                        href="#"
+                                    <router-link
+                                        :to="{
+                                            name: 'PostEdit',
+                                            params: {
+                                                id: viewPost.id,
+                                            },
+                                        }"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                         role="menuitem"
                                         tabindex="-1"
                                         id="user-menu-item-0"
-                                        >Edit</a
+                                        >Edit</router-link
                                     >
-                                    <a
-                                        href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        role="menuitem"
-                                        tabindex="-1"
-                                        id="user-menu-item-1"
-                                        >Delete</a
+                                    <form @submit.prevent="handlePostDelete(viewPost.id)"
+                                        class="hover:bg-gray-100"
                                     >
+                                       
+                                        <button
+                                            type="submit"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            role="menuitem"
+                                            tabindex="-1"
+                                            id="user-menu-item-1"
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                         <!-- /Card Action Dropdown -->
-                        @endif
+                    
                     </div>
                 </header>
 
@@ -164,7 +169,7 @@
                 <div class="py-4 text-gray-700 font-normal">
                     <p>
                         <br />
-                        barta
+                        {{ viewPost.barta }}
                         <a
                             href="#laravel"
                             class="text-black font-semibold hover:underline"
@@ -172,12 +177,17 @@
                         <br />
                         <br />
                     </p>
-                    <img src="" alt="" />
+                    <ImageShow
+                        :ïmage="viewPost.image"
+                        clss="h-12 w-12 rounded-full"
+                    />
                 </div>
 
                 <!-- Date Created & View Stat -->
                 <div class="flex items-center gap-2 text-gray-500 text-xs my-2">
-                    <span class="">date</span>
+                    <span class="">{{
+                        moment(viewPost.created_at).fromNow()
+                    }}</span>
                     <span class="">•</span>
                     <span>450 views</span>
                 </div>

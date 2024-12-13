@@ -9,7 +9,7 @@ import router from "@/router";
 const $toast = useToast();
 const editPost = ref({});
 let imageUrl = ref(null);
-const baseUrl = "http://127.0.0.1:8000/";
+const baseUrl = import.meta.env.VITE_API_URL;
 const { params } = useRoute();
 const id = params.id;
 

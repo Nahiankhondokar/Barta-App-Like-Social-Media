@@ -6,7 +6,6 @@ import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
-import router from "@/router";
 import { authenticationCheck } from "../../Service/authentication";
 
 const props = defineProps({
@@ -14,8 +13,6 @@ const props = defineProps({
         type : Object
     }
 });
-
-console.log(props.authUser.id)
 
 let usePosts = reactive({
     posts: [],
@@ -91,30 +88,38 @@ onMounted(() => {
                             <div
                                 class="text-gray-900 flex flex-col min-w-0 flex-1"
                             >
-                                <a
-                                    href=""
+                                <router-link :to="{
+                                        name: 'Profile',
+                                        params: {
+                                            id: props?.authUser?.id ?? 0,
+                                        },
+                                    }"
                                     class="hover:underline font-semibold line-clamp-1"
                                 >
                                     {{ post.user.name }}
-                                </a>
+                                </router-link>
 
-                                <a
-                                    href=""
+                                <router-link :to="{
+                                        name: 'Profile',
+                                        params: {
+                                            id: props?.authUser?.id ?? 0,
+                                        },
+                                    }"
                                     class="hover:underline text-sm text-gray-500 line-clamp-1"
                                 >
                                     {{ post.user.email }}
-                                </a>
+                                </router-link>
                             </div>
                             <!-- /User Info -->
                         </div>
 
                         <!-- Card Action Dropdown -->
-                        <div class="flex flex-shrink-0 self-center">
+                        <div class="flex flex-shrink-0 self-center" v-if="post.user.id == props.authUser.id">
                             <div class="relative inline-block text-left">
                                 <div>
 
                                     <button
-                                        v-if="post.user.id == props.authUser.id"
+                                        
                                         @click="handlePostDropDown(post.id)"
                                         type="button"
                                         class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600"
@@ -182,7 +187,12 @@ onMounted(() => {
 
                 <!-- Content -->
                 <div class="py-4 text-gray-700 font-normal">
-                    <router-link to="">
+                    <router-link  :to="{
+                                        name: 'PostView',
+                                        params: {
+                                            id: post.id,
+                                        },
+                                    }">
                         <p>
                             {{ post.barta }}
                             <br />

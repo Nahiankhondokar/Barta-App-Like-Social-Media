@@ -1,11 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { toast } from "vue3-toastify";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
+import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
 
 const authUser = ref({});
+let imageUrl = ref(null);
 const $toast = useToast();
 let form = ref({
     barta: "",
@@ -14,6 +15,9 @@ let form = ref({
 
 function handleImageUpload(e) {
     let file = event.target.files[0];
+    imageUrl.value = URL.createObjectURL(file);
+    URL.revokeObjectURL(file); // security perpouse
+
     if (file) {
         form.value.image = file;
     }
@@ -42,11 +46,11 @@ const handlePostSubmit = async () => {
         });
 };
 
-onMounted(() => {
-    axios
-        .get("api/me")
+onMounted(async ()  => {
+    await axios
+        .get("/api/me")
         .then(function (response) {
-            authUser.value = response.data;
+            authUser.value = response.data.data;
         })
         .catch(function (error) {
             console.log(error);
@@ -90,7 +94,7 @@ onMounted(() => {
             <div class="flex items-center justify-between">
                 <div class="flex gap-4 text-gray-600">
                     <!-- Upload Picture Button -->
-                    <div>
+                    <div class="flex items-center gap-x-2">
                         <input
                             type="file"
                             id="picture"
@@ -117,6 +121,12 @@ onMounted(() => {
                                 />
                             </svg>
                         </label>
+                         <!-- preview image -->
+                         <img
+                            :src="imageUrl ?? NoImage"
+                            class="h-10 w-10 rounded-full object-cover"
+                            alt=""
+                        />
                     </div>
                     <!-- /Upload Picture Button -->
 

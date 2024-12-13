@@ -21,6 +21,8 @@ onMounted(() => {
 
 <template>
     <Header :authUser="authUser"></Header>
+    <div class="mt-10"></div>
     <router-view :authUser="authUser"></router-view>
+    <div class="mt-10"></div>
     <Footer></Footer>
 </template>
