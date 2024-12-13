@@ -23,6 +23,8 @@ const handleUserLogut = () => {
             console.log(error);
         });
 };
+
+
 </script>
 
 <template>

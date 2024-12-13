@@ -11,6 +11,7 @@ const authUser = ref({});
 onMounted(() => {
     authenticationCheck()
         .then((response) => {
+            authUser.value = null;
             authUser.value = response.data;
         })
         .catch((error) => {

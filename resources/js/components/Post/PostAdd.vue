@@ -9,6 +9,7 @@ import router from "@/router";
 const authUser = ref({});
 let imageUrl = ref(null);
 const $toast = useToast();
+let warmMsg = ref(null);
 let form = ref({
     barta: "",
     image: null,
@@ -57,11 +58,16 @@ onMounted(async ()  => {
         .get("/api/me")
         .then(function (response) {
             authUser.value = response.data.data;
+            warmMsg.value = "What's going on,"+authUser.value.name;
         })
         .catch(function (error) {
             console.log(error);
         });
 });
+
+
+
+
 </script>
 
 <template>
@@ -88,7 +94,7 @@ onMounted(async ()  => {
                         class="block w-full p-2 pt-2 text-gray-900 rounded-lg border-none outline-none focus:ring-0 focus:ring-offset-0"
                         v-model="form.barta"
                         rows="2"
-                        placeholder="What's going on, ?"
+                        :placeholder="warmMsg"
                     ></textarea>
                 </div>
             </div>
