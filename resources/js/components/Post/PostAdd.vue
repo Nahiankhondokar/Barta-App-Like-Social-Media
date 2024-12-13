@@ -4,6 +4,7 @@ import ImageShow from "../ImageShow/ImageShow.vue";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
 import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
+import router from "@/router";
 
 const authUser = ref({});
 let imageUrl = ref(null);
@@ -11,6 +12,12 @@ const $toast = useToast();
 let form = ref({
     barta: "",
     image: null,
+});
+
+const props = defineProps({
+    showAllPost: {
+        type : Function
+    }
 });
 
 function handleImageUpload(e) {
@@ -38,8 +45,7 @@ const handlePostSubmit = async () => {
         })
         .then(function (response) {
             $toast.success(response.data.message);
-
-            getAllPost();
+            props.showAllPost();
         })
         .catch(function (error) {
             console.log(error);
