@@ -8,15 +8,17 @@ import {
 } from "./Service/authentication";
 
 const authUser = ref({});
+const handleAuthCheck = async () => {
+    try {
+        const response = await authenticationCheck();
+        authUser.value = response.data;
+    } catch (error) {
+        unAuthenticateUser(error.status);
+    }    
+}
+
 onMounted(() => {
-    authenticationCheck()
-        .then((response) => {
-            authUser.value = null;
-            authUser.value = response.data;
-        })
-        .catch((error) => {
-            unAuthenticateUser(error.status);
-        });
+    handleAuthCheck();
 });
 </script>
 

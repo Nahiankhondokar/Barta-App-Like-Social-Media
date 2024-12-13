@@ -21,8 +21,5 @@ export const unAuthenticateUser = (statusCode) => {
 export const authenticationCheck = async ()=> {
     return await axios
         .get("/api/me")
-        .then((response)=> response.data)
-        .catch(function (error) {
-            unAuthenticateUser(error.status);
-        });
+        .then((response)=> response.data);
 }
