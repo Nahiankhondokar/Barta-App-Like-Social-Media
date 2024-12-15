@@ -3,17 +3,35 @@ import { inject, onMounted, ref } from "vue";
 import router from "@/router";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import { authenticationCheck } from "../../middleware/authentication";
+import { useToast } from "vue-toast-notification";
 
+const $toast = useToast();
 let moreOption = ref(false);
 const authUser = inject("authUser");
+let posts = inject("posts");
 
-const handleUserLogut = () => {
+const handleUserLogout = () => {
     axios
         .get("/api/logout")
         .then(function (response) {
+            authUser.value = {};
             localStorage.removeItem("loggedIn");
             router.push({ name: "Login" });
             $toast.success(response.data.message);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+const handlePostSearch = async (e) => {
+    const formData = new FormData();
+    formData.append("search", e.target.value);
+
+    await axios
+        .post("/api/post-search", formData)
+        .then(function (response) {
+            posts = response.data.data;
         })
         .catch(function (error) {
             console.log(error);
@@ -65,6 +83,7 @@ onMounted(() => {
                             type="text"
                             name="search"
                             placeholder="Search by name, username, email, post..."
+                            @keyup.prevent="handlePostSearch"
                             value=""
                             class="border-2 border-gray-300 bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
                         />
@@ -174,7 +193,7 @@ onMounted(() => {
                                     >Edit Profile</router-link
                                 >
                                 <button
-                                    @click="handleUserLogut"
+                                    @click="handleUserLogout"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                     role="menuitem"
                                     tabindex="-1"

@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from "vue";
 import { useToast } from "vue-toast-notification";
+import router from "@/router";
 
 const $toast = useToast();
 let form = ref({
@@ -22,6 +23,7 @@ const handleUserRegister = async () => {
         .post("/api/register", formData)
         .then(function (response) {
             $toast.success(response.data.message);
+            router.push({ name: "Login" });
         })
         .catch(function (error) {
             errors.value = error.response.data.errors;
@@ -49,7 +51,7 @@ const handleUserRegister = async () => {
                     <label
                         for="name"
                         class="block text-sm font-medium leading-6 text-gray-900"
-                        >Full Name</label
+                        >Name</label
                     >
                     <div class="mt-2">
                         <input

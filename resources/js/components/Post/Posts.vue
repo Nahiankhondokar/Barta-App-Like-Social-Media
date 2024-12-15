@@ -8,10 +8,16 @@ import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
 import { authenticationCheck } from "../../middleware/authentication";
 
+const authUser = inject("authUser");
+
 let usePosts = reactive({
     posts: [],
 });
-const authUser = inject("authUser");
+
+// const posts = inject("posts");
+// if (posts.length != 0) {
+//     usePosts.posts.push(...posts);
+// }
 let postId = ref(null);
 const $toast = useToast();
 

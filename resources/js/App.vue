@@ -1,10 +1,12 @@
 <script setup>
-import { onMounted, provide, ref, watch } from "vue";
+import { onMounted, provide, reactive, ref, watch } from "vue";
 import Footer from "./components/Layouts/Footer.vue";
 import Header from "./components/Layouts/Header.vue";
 import { authenticationCheck, authUser } from "./middleware/authentication";
 
+let posts = reactive([]);
 provide("authUser", authUser);
+provide("posts", posts);
 
 onMounted(() => {
     authenticationCheck();

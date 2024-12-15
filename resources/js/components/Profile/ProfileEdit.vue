@@ -134,7 +134,7 @@ onMounted(() => {
                                 <label
                                     for="first-name"
                                     class="block text-sm font-medium leading-6 text-gray-900"
-                                    >First name</label
+                                    >Name</label
                                 >
                                 <div class="mt-2">
                                     <input
@@ -151,7 +151,7 @@ onMounted(() => {
                                 <label
                                     for="last-name"
                                     class="block text-sm font-medium leading-6 text-gray-900"
-                                    >Last name</label
+                                    >Username</label
                                 >
                                 <div class="mt-2">
                                     <input
