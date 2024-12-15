@@ -46,6 +46,9 @@ const handlePostSubmit = async () => {
         })
         .then(function (response) {
             $toast.success(response.data.message);
+            form.value.barta = "";
+            form.value.image = "";
+            imageUrl.value = null;
             props.showAllPost();
         })
         .catch(function (error) {

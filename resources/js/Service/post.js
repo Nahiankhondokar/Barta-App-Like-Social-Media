@@ -1,5 +1,5 @@
 import axios from "axios";
-import { unAuthenticateUser } from "./authentication";
+import { unAuthenticateUser } from "../middleware/authentication";
 
 
 export const getAllPost = async () => {

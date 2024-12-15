@@ -1,5 +1,6 @@
 
 import router from "@/router";
+import {ref} from "vue";
 
 export const unAuthenticateUser = (statusCode) => {
    if(statusCode == 401){
@@ -17,9 +18,14 @@ export const unAuthenticateUser = (statusCode) => {
    }
 }
 
-
+export const authUser = ref({});
 export const authenticationCheck = async ()=> {
     return await axios
         .get("/api/me")
-        .then((response)=> response.data);
+        .then((response)=> {
+            console.log(response.data)
+            authUser.value = response.data;
+        }).catch((error) => {
+            unAuthenticateUser(error.status);
+        });
 }

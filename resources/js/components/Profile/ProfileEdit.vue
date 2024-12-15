@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { useToast } from "vue-toast-notification";
 import { useRoute } from "vue-router";
 import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
-import { unAuthenticateUser } from "../../Service/authentication";
+import { unAuthenticateUser } from "../../middleware/authentication";
 import router from "@/router";
 
 const $toast = useToast();

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import router from "@/router";
 import { useToast } from "vue-toast-notification";
+import { authenticationCheck } from "../../middleware/authentication";
 
 const $toast = useToast();
 let form = ref({
@@ -20,6 +21,7 @@ const handleUserLogin = async () => {
         .then(function (response) {
             localStorage.setItem("loggedIn", "true");
             router.push({ name: "Dashboard" });
+            authenticationCheck();
             $toast.success(response.data.message);
         })
         .catch(function (error) {

@@ -6,7 +6,7 @@ import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
-import { authenticationCheck } from "../../Service/authentication";
+import { authenticationCheck } from "../../middleware/authentication";
 
 const props = defineProps({
     authUser : {

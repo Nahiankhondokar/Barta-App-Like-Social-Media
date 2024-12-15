@@ -1,16 +1,12 @@
 <script setup>
-import { inject, provide, ref } from "vue";
+import { inject, onMounted, provide, ref } from "vue";
 import router from "@/router";
 import ImageShow from "../ImageShow/ImageShow.vue";
+import { authUser } from "../../middleware/authentication";
+import { useToast } from "vue-toast-notification";
 
 let moreOption = ref(false);
-
-const props = defineProps({
-    authUser: {
-        type: Object,
-    },
-});
-
+const $toast = useToast();
 const handleUserLogut = () => {
     axios
         .get("/api/logout")
@@ -24,7 +20,11 @@ const handleUserLogut = () => {
         });
 };
 
-
+onMounted(() => {
+    authenticationCheck()
+    authUser
+});
+console.log(authUser.value)
 </script>
 
 <template>
@@ -73,12 +73,12 @@ const handleUserLogut = () => {
                     </form>
                     <div class="hidden sm:ml-6 sm:flex gap-2 sm:items-center">
                         <!-- This Button Should Be Hidden on Mobile Devices -->
-                        <button
+                        <router-link to="/"
                             type="button"
                             class="text-gray-900 hover:text-white border-2 border-gray-800 hover:bg-gray-900 focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hidden md:block"
                         >
-                            Create Post
-                        </button>
+                            {{ authUser.value.name }}
+                        </router-link>
 
                         <!--              <button-->
                         <!--                type="button"-->
@@ -130,10 +130,10 @@ const handleUserLogut = () => {
                                     aria-haspopup="true"
                                 >
                                     <span class="sr-only">Open user menu</span>
-                                    <ImageShow
-                                        :ïmage="props?.authUser.image"
+                                    <!-- <ImageShow
+                                        :ïmage="authUser.value.image"
                                         css="h-12 w-12 rounded-full"
-                                    />
+                                    /> -->
                                 </button>
                             </div>
 
@@ -147,11 +147,11 @@ const handleUserLogut = () => {
                                 aria-labelledby="user-menu-button"
                                 tabindex="-1"
                             >
-                                <router-link
+                                <router-link v-if="authUser.value.id"
                                     :to="{
                                         name: 'Profile',
                                         params: {
-                                            id: props?.authUser?.id ?? 0,
+                                            id: authUser.value.id,
                                         },
                                     }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -160,11 +160,11 @@ const handleUserLogut = () => {
                                     id="user-menu-item-0"
                                     >Your Profile</router-link
                                 >
-                                <router-link
+                                <router-link v-if="authUser.value.id"
                                     :to="{
                                         name: 'ProfileEdit',
                                         params: {
-                                            id: props?.authUser?.id ?? 0,
+                                            id: authUser.value.id,
                                         },
                                     }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
