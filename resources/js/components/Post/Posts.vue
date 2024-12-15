@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { onMounted, reactive, ref } from "vue";
+import { inject, onMounted, reactive, ref } from "vue";
 import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
@@ -8,15 +8,10 @@ import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
 import { authenticationCheck } from "../../middleware/authentication";
 
-const props = defineProps({
-    authUser : {
-        type : Object
-    }
-});
-
 let usePosts = reactive({
     posts: [],
 });
+const authUser = inject("authUser");
 let postId = ref(null);
 const $toast = useToast();
 
@@ -33,14 +28,14 @@ const handlePostDelete = async (id) => {
         .then(function (response) {
             $toast.success(response.data.message);
 
-           showAllPost();
+            showAllPost();
         })
         .catch(function (error) {
             console.log(error);
         });
 };
 
-const showAllPost = ()=>{
+const showAllPost = () => {
     getAllPost()
         .then((response) => {
             usePosts.posts = response;
@@ -48,7 +43,7 @@ const showAllPost = ()=>{
         .catch((error) => {
             console.log(error);
         });
-}
+};
 
 onMounted(() => {
     showAllPost();
@@ -77,8 +72,8 @@ onMounted(() => {
                         <div class="flex items-center space-x-3">
                             <!-- User Avatar -->
                             <div class="flex-shrink-0">
-                                <ImageShow 
-                                    :ïmage="post.user.image"
+                                <ImageShow
+                                    :image="post.user.image"
                                     css="h-10 w-10 rounded-full object-cover"
                                 />
                             </div>
@@ -88,10 +83,11 @@ onMounted(() => {
                             <div
                                 class="text-gray-900 flex flex-col min-w-0 flex-1"
                             >
-                                <router-link :to="{
+                                <router-link
+                                    :to="{
                                         name: 'Profile',
                                         params: {
-                                            id: props?.authUser?.id ?? 0,
+                                            id: authUser?.id ?? 0,
                                         },
                                     }"
                                     class="hover:underline font-semibold line-clamp-1"
@@ -99,10 +95,11 @@ onMounted(() => {
                                     {{ post.user.name }}
                                 </router-link>
 
-                                <router-link :to="{
+                                <router-link
+                                    :to="{
                                         name: 'Profile',
                                         params: {
-                                            id: props?.authUser?.id ?? 0,
+                                            id: authUser?.id ?? 0,
                                         },
                                     }"
                                     class="hover:underline text-sm text-gray-500 line-clamp-1"
@@ -114,12 +111,13 @@ onMounted(() => {
                         </div>
 
                         <!-- Card Action Dropdown -->
-                        <div class="flex flex-shrink-0 self-center" v-if="post.user.id == props.authUser.id">
+                        <div
+                            class="flex flex-shrink-0 self-center"
+                            v-if="post.user.id == authUser.id"
+                        >
                             <div class="relative inline-block text-left">
                                 <div>
-
                                     <button
-                                        
                                         @click="handlePostDropDown(post.id)"
                                         type="button"
                                         class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600"
@@ -139,7 +137,6 @@ onMounted(() => {
                                             ></path>
                                         </svg>
                                     </button>
-
                                 </div>
                                 <!-- Dropdown menu -->
                                 <div
@@ -164,10 +161,12 @@ onMounted(() => {
                                         id="user-menu-item-0"
                                         >Edit</router-link
                                     >
-                                    <form @submit.prevent="handlePostDelete(post.id)"
+                                    <form
+                                        @submit.prevent="
+                                            handlePostDelete(post.id)
+                                        "
                                         class="hover:bg-gray-100"
                                     >
-                                       
                                         <button
                                             type="submit"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -187,12 +186,14 @@ onMounted(() => {
 
                 <!-- Content -->
                 <div class="py-4 text-gray-700 font-normal">
-                    <router-link  :to="{
-                                        name: 'PostView',
-                                        params: {
-                                            id: post.id,
-                                        },
-                                    }">
+                    <router-link
+                        :to="{
+                            name: 'PostView',
+                            params: {
+                                id: post.id,
+                            },
+                        }"
+                    >
                         <p>
                             {{ post.barta }}
                             <br />
@@ -205,7 +206,7 @@ onMounted(() => {
                         </p>
                     </router-link>
 
-                    <ImageShow :ïmage="post.image" css="" />
+                    <ImageShow :image="post.image" css="" />
                 </div>
 
                 <!-- Date Created & View Stat -->

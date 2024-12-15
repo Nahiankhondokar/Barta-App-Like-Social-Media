@@ -1,12 +1,12 @@
 <script setup>
-import { inject, onMounted, provide, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import router from "@/router";
 import ImageShow from "../ImageShow/ImageShow.vue";
-import { authUser } from "../../middleware/authentication";
-import { useToast } from "vue-toast-notification";
+import { authenticationCheck } from "../../middleware/authentication";
 
 let moreOption = ref(false);
-const $toast = useToast();
+const authUser = inject("authUser");
+
 const handleUserLogut = () => {
     axios
         .get("/api/logout")
@@ -21,10 +21,8 @@ const handleUserLogut = () => {
 };
 
 onMounted(() => {
-    authenticationCheck()
-    authUser
+    authenticationCheck();
 });
-console.log(authUser.value)
 </script>
 
 <template>
@@ -73,12 +71,12 @@ console.log(authUser.value)
                     </form>
                     <div class="hidden sm:ml-6 sm:flex gap-2 sm:items-center">
                         <!-- This Button Should Be Hidden on Mobile Devices -->
-                        <router-link to="/"
+                        <button
                             type="button"
                             class="text-gray-900 hover:text-white border-2 border-gray-800 hover:bg-gray-900 focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hidden md:block"
                         >
-                            {{ authUser.value.name }}
-                        </router-link>
+                            {{ authUser.name }}
+                        </button>
 
                         <!--              <button-->
                         <!--                type="button"-->
@@ -130,10 +128,10 @@ console.log(authUser.value)
                                     aria-haspopup="true"
                                 >
                                     <span class="sr-only">Open user menu</span>
-                                    <!-- <ImageShow
-                                        :ïmage="authUser.value.image"
+                                    <ImageShow
+                                        :image="authUser?.image"
                                         css="h-12 w-12 rounded-full"
-                                    /> -->
+                                    />
                                 </button>
                             </div>
 
@@ -147,11 +145,12 @@ console.log(authUser.value)
                                 aria-labelledby="user-menu-button"
                                 tabindex="-1"
                             >
-                                <router-link v-if="authUser.value.id"
+                                <router-link
+                                    v-if="authUser.id"
                                     :to="{
                                         name: 'Profile',
                                         params: {
-                                            id: authUser.value.id,
+                                            id: authUser?.id,
                                         },
                                     }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -160,11 +159,12 @@ console.log(authUser.value)
                                     id="user-menu-item-0"
                                     >Your Profile</router-link
                                 >
-                                <router-link v-if="authUser.value.id"
+                                <router-link
+                                    v-if="authUser.id"
                                     :to="{
                                         name: 'ProfileEdit',
                                         params: {
-                                            id: authUser.value.id,
+                                            id: authUser?.id,
                                         },
                                     }"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

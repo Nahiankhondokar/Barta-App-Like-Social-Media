@@ -2,7 +2,7 @@
 import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
 
 const props = defineProps({
-    ïmage: {
+    image: {
         type: String,
     },
     css: {
@@ -14,6 +14,6 @@ const baseUrl = import.meta.env.VITE_API_URL;
 </script>
 
 <template>
-    <img v-if="ïmage" :src="baseUrl + ïmage" :class="css" alt="image" />
+    <img v-if="image" :src="baseUrl + image" :class="css" alt="image" />
     <img v-else :src="NoImage" alt="no image" :class="css" />
 </template>

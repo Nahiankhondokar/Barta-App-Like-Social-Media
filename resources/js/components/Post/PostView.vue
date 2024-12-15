@@ -17,9 +17,9 @@ const handlePostDropDown = (key = null) => {
 };
 
 const props = defineProps({
-    authUser : {
-        type : Object
-    }
+    authUser: {
+        type: Object,
+    },
 });
 
 const handlePostDelete = async (id) => {
@@ -30,7 +30,7 @@ const handlePostDelete = async (id) => {
         .delete(`/api/post/${id}`)
         .then(function (response) {
             $toast.success(response.data.message);
-            router.push({name: "Dashboard"});
+            router.push({ name: "Dashboard" });
         })
         .catch(function (error) {
             console.log(error);
@@ -39,7 +39,7 @@ const handlePostDelete = async (id) => {
 
 onMounted(() => {
     axios
-        .get("/api/post/"+id)
+        .get("/api/post/" + id)
         .then(function (response) {
             viewPost.value = response.data.data;
         })
@@ -65,7 +65,7 @@ onMounted(() => {
                             <!-- User Avatar -->
                             <div class="flex-shrink-0">
                                 <ImageShow
-                                    :ïmage="props?.authUser.image"
+                                    :image="props?.authUser.image"
                                     css="h-12 w-12 rounded-full"
                                 />
                             </div>
@@ -86,19 +86,20 @@ onMounted(() => {
                                     href=""
                                     class="hover:underline text-sm text-gray-500 line-clamp-1"
                                 >
-                                {{ viewPost?.user?.email }}
+                                    {{ viewPost?.user?.email }}
                                 </a>
                             </div>
                             <!-- /User Info -->
                         </div>
 
                         <!-- Card Action Dropdown -->
-                        <div class="flex flex-shrink-0 self-center" v-if="viewPost.user_id == props.authUser.id" >
+                        <div
+                            class="flex flex-shrink-0 self-center"
+                            v-if="viewPost.user_id == props.authUser.id"
+                        >
                             <div class="relative inline-block text-left">
                                 <div>
-
                                     <button
-                                        
                                         @click="handlePostDropDown(viewPost.id)"
                                         type="button"
                                         class="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600"
@@ -118,7 +119,6 @@ onMounted(() => {
                                             ></path>
                                         </svg>
                                     </button>
-
                                 </div>
                                 <!-- Dropdown menu -->
                                 <div
@@ -143,10 +143,12 @@ onMounted(() => {
                                         id="user-menu-item-0"
                                         >Edit</router-link
                                     >
-                                    <form @submit.prevent="handlePostDelete(viewPost.id)"
+                                    <form
+                                        @submit.prevent="
+                                            handlePostDelete(viewPost.id)
+                                        "
                                         class="hover:bg-gray-100"
                                     >
-                                       
                                         <button
                                             type="submit"
                                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -161,7 +163,6 @@ onMounted(() => {
                             </div>
                         </div>
                         <!-- /Card Action Dropdown -->
-                    
                     </div>
                 </header>
 
@@ -178,7 +179,7 @@ onMounted(() => {
                         <br />
                     </p>
                     <ImageShow
-                        :ïmage="viewPost.image"
+                        :image="viewPost.image"
                         clss="h-12 w-12 rounded-full"
                     />
                 </div>

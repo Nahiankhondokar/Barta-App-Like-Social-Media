@@ -23,8 +23,7 @@ export const authenticationCheck = async ()=> {
     return await axios
         .get("/api/me")
         .then((response)=> {
-            console.log(response.data)
-            authUser.value = response.data;
+            authUser.value = response.data.data;
         }).catch((error) => {
             unAuthenticateUser(error.status);
         });
