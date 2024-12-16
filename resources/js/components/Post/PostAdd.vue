@@ -1,5 +1,5 @@
 <script setup>
-import { computed, inject, onMounted, reactive, ref } from "vue";
+import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import { useToast } from "vue-toast-notification";
 import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
@@ -12,6 +12,8 @@ let form = ref({
     barta: "",
     image: null,
 });
+const authUser = inject("authUser");
+const placeholderMsg = ref("");
 
 const props = defineProps({
     showAllPost: {
@@ -54,10 +56,10 @@ const handlePostSubmit = async () => {
             console.log(error);
         });
 };
-const authUser = inject("authUser");
-const warmMsg = computed(() => ({
-    placeholder: `Hello, what's going on, ${authUser?.value?.name || "Guest"}?`,
-}));
+
+watch(authUser, (newData, oldData)=> {
+    placeholderMsg.value = `Hello, what's going on, ${newData?.name || "Guest"}?`
+});
 
 onMounted(async () => {
     await authenticationCheck();
@@ -88,7 +90,7 @@ onMounted(async () => {
                         class="block w-full p-2 pt-2 text-gray-900 rounded-lg border-none outline-none focus:ring-0 focus:ring-offset-0"
                         v-model="form.barta"
                         rows="2"
-                        :placeholder="warmMsg.placeholder"
+                        :placeholder="placeholderMsg"
                     ></textarea>
                     <span class="text-red-700" v-if="errors?.barta">
                         {{ errors?.barta[0] }}
