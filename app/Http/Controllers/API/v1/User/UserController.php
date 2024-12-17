@@ -58,6 +58,10 @@ class UserController extends Controller
         ->orWhereFullText(['barta'], $request->search)
         ->get();
 
-        return $this->sendApiResponse($posts, 'Search result');
+        if(count($posts) == 0){
+            $posts = Post::query()->with('user')->orderByDesc('id')->get();
+        }
+
+        return $this->sendApiResponse($posts->load('user'), 'Search result');
     }
 }

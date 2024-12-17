@@ -8,7 +8,7 @@ import { useToast } from "vue-toast-notification";
 const $toast = useToast();
 let moreOption = ref(false);
 const authUser = inject("authUser");
-let posts = inject("posts");
+let search = inject("posts");
 
 const handleUserLogout = () => {
     axios
@@ -31,7 +31,7 @@ const handlePostSearch = async (e) => {
     await axios
         .post("/api/post-search", formData)
         .then(function (response) {
-            posts = response.data.data;
+            search.value = response.data.data;
         })
         .catch(function (error) {
             console.log(error);

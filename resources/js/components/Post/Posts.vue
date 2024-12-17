@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { inject, onMounted, reactive, ref } from "vue";
+import { inject, onMounted, reactive, ref, watch } from "vue";
 import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
@@ -9,15 +9,14 @@ import { useToast } from "vue-toast-notification";
 import { authenticationCheck } from "../../middleware/authentication";
 
 const authUser = inject("authUser");
+const searchResponse = inject("posts");
 
 let usePosts = reactive({
     posts: [],
 });
 
-// const posts = inject("posts");
-// if (posts.length != 0) {
-//     usePosts.posts.push(...posts);
-// }
+// console.log(searchResponse)
+
 let postId = ref(null);
 const $toast = useToast();
 
@@ -51,6 +50,13 @@ const showAllPost = () => {
         });
 };
 
+watch(searchResponse, (newData, oldData) => {
+    if (searchResponse.length != 0) {
+        usePosts.posts = newData;
+    }
+    // console.log(newData)
+});
+
 onMounted(() => {
     showAllPost();
     authenticationCheck();
@@ -79,7 +85,7 @@ onMounted(() => {
                             <!-- User Avatar -->
                             <div class="flex-shrink-0">
                                 <ImageShow
-                                    :image="post.user.image"
+                                    :image="post?.user?.image"
                                     css="h-10 w-10 rounded-full object-cover"
                                 />
                             </div>

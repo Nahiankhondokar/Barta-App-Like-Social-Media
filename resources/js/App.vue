@@ -4,7 +4,7 @@ import Footer from "./components/Layouts/Footer.vue";
 import Header from "./components/Layouts/Header.vue";
 import { authenticationCheck, authUser } from "./middleware/authentication";
 
-let posts = reactive([]);
+let posts = ref([]);
 provide("authUser", authUser);
 provide("posts", posts);
 
