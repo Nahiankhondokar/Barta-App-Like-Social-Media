@@ -56,7 +56,7 @@ class UserController extends Controller
             $q->whereFullText(['name', 'username', 'email'], $request->search);
         })
         ->orWhereFullText(['barta'], $request->search)
-        ->get();
+        ->paginate(3);
 
         if(count($posts) == 0){
             $posts = Post::query()->with('user')->orderByDesc('id')->get();

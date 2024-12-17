@@ -19,7 +19,11 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::query()->with('user')->orderBy('id', 'desc')->get();
+        $posts = Post::query()
+        ->with('user')
+        ->orderBy('id', 'desc')
+        ->paginate(5);
+
         return $this->sendApiResponse($posts, "Post list show");
     }
 

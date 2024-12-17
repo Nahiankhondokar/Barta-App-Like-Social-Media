@@ -11,13 +11,11 @@ import { authenticationCheck } from "../../middleware/authentication";
 const authUser = inject("authUser");
 const searchResponse = inject("posts");
 
-let usePosts = reactive({
-    posts: [],
-});
-
-// console.log(searchResponse)
+let allPost = reactive([]);
 
 let postId = ref(null);
+let currentPage = ref(0);
+let lastPage = ref(0);
 const $toast = useToast();
 
 const handlePostDropDown = (key = null) => {
@@ -40,21 +38,34 @@ const handlePostDelete = async (id) => {
         });
 };
 
-const showAllPost = () => {
-    getAllPost()
+const showAllPost = async () => {
+    await getAllPost()
         .then((response) => {
-            usePosts.posts = response;
+            allPost = response.data;
+            currentPage.value = response.current_page;
+            lastPage.value = response.last_page;
         })
         .catch((error) => {
             console.log(error);
         });
 };
 
+const handlePostPagination = async () => {
+    currentPage.value++;
+    await axios
+        .get(`/api/post?page=${currentPage.value}`)
+        .then(function (response) {
+            allPost.push(...response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
-        usePosts.posts = newData;
+        allPost = newData;
     }
-    // console.log(newData)
 });
 
 onMounted(() => {
@@ -74,7 +85,7 @@ onMounted(() => {
             <!-- Barta Card -->
 
             <article
-                v-for="post in usePosts.posts"
+                v-for="post in allPost"
                 :key="post.id"
                 class="bg-white border-2 border-black rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6"
             >
@@ -268,7 +279,7 @@ onMounted(() => {
             </article>
 
             <article
-                v-if="usePosts.posts.length < 1"
+                v-if="allPost.length < 1"
                 class="bg-white border-2 border-red-900 rounded-lg shadow mx-auto max-w-none px-4 py-5 sm:px-6"
             >
                 <!-- Barta Card Top -->
@@ -287,6 +298,16 @@ onMounted(() => {
                     </div>
                 </header>
             </article>
+
+            <section class="flex justify-content-center">
+                <button
+                    v-if="currentPage != lastPage"
+                    class="bg-gray-500 p-2 rounded-sm text-white text-center m-auto d-inline-block"
+                    @click="handlePostPagination"
+                >
+                    Load More
+                </button>
+            </section>
 
             <!-- /Barta Card -->
 
