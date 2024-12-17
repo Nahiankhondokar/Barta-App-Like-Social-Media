@@ -49,17 +49,17 @@ class UserController extends Controller
         return $this->sendApiResponse($user, 'User updated');
     }
 
-    public function search(Request $request)
+    public function search(Request $request, $pageNum = 5)
     {
         $posts = Post::query()
         ->whereHas('user', function($q) use ($request){
             $q->whereFullText(['name', 'username', 'email'], $request->search);
         })
         ->orWhereFullText(['barta'], $request->search)
-        ->paginate(3);
+        ->paginate($pageNum);
 
         if(count($posts) == 0){
-            $posts = Post::query()->with('user')->orderByDesc('id')->get();
+            $posts = Post::query()->with('user')->orderByDesc('id')->paginate($pageNum);
         }
 
         return $this->sendApiResponse($posts->load('user'), 'Search result');

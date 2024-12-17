@@ -11,8 +11,7 @@ import { authenticationCheck } from "../../middleware/authentication";
 const authUser = inject("authUser");
 const searchResponse = inject("posts");
 
-let allPost = reactive([]);
-
+let allPost = ref([]);
 let postId = ref(null);
 let currentPage = ref(0);
 let lastPage = ref(0);
@@ -30,7 +29,6 @@ const handlePostDelete = async (id) => {
         .delete(`/api/post/${id}`)
         .then(function (response) {
             $toast.success(response.data.message);
-
             showAllPost();
         })
         .catch(function (error) {
@@ -41,7 +39,7 @@ const handlePostDelete = async (id) => {
 const showAllPost = async () => {
     await getAllPost()
         .then((response) => {
-            allPost = response.data;
+            allPost.value = response.data;
             currentPage.value = response.current_page;
             lastPage.value = response.last_page;
         })
@@ -55,7 +53,7 @@ const handlePostPagination = async () => {
     await axios
         .get(`/api/post?page=${currentPage.value}`)
         .then(function (response) {
-            allPost.push(...response.data.data);
+            allPost.value.push(...response.data.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -64,7 +62,7 @@ const handlePostPagination = async () => {
 
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
-        allPost = newData;
+        allPost.value = newData;
     }
 });
 

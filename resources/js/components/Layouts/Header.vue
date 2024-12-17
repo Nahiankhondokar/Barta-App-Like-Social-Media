@@ -78,7 +78,10 @@ onMounted(() => {
                         <!--              </div>-->
                     </div>
                     <!-- Search input -->
-                    <form action="" method="POST" class="flex items-center">
+                    <form
+                        @submit.prevent="handlePostSearch"
+                        class="flex items-center"
+                    >
                         <input
                             type="text"
                             name="search"

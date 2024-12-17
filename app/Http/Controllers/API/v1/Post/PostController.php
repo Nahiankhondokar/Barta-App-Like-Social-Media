@@ -17,12 +17,12 @@ class PostController extends Controller
 {
     use sendApiResponse;
 
-    public function index()
+    public function index($pageNum = 5)
     {
         $posts = Post::query()
         ->with('user')
         ->orderBy('id', 'desc')
-        ->paginate(5);
+        ->paginate($pageNum);
 
         return $this->sendApiResponse($posts, "Post list show");
     }
