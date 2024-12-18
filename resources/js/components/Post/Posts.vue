@@ -300,7 +300,7 @@ onMounted(() => {
             <section class="flex justify-content-center">
                 <button
                     v-if="currentPage != lastPage"
-                    class="bg-gray-500 p-2 rounded-sm text-white text-center m-auto d-inline-block"
+                    class="bg-gray-500 p-2 rounded-sm text-white text-center font-medium m-auto hover:text-black hover:bg-gray-100"
                     @click="handlePostPagination"
                 >
                     Load More

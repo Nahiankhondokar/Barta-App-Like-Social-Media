@@ -115,7 +115,7 @@ const handleUserLogin = async () => {
             <p class="mt-10 text-center text-sm text-gray-500">
                 Don't have an account yet?
                 <router-link
-                    to="/register"
+                    :to="{name: 'Register'}"
                     class="font-semibold leading-6 text-black hover:text-black"
                     >Sign Up</router-link
                 >

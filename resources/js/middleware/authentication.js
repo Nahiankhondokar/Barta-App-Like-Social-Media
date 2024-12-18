@@ -10,10 +10,10 @@ export const unAuthenticateUser = (statusCode) => {
         axios
         .get("/api/logout")
         .then(function (response) {
-        //
+            console.log('logout')
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         });
    }
 }
