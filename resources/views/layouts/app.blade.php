@@ -7,6 +7,7 @@
       content="width=device-width, initial-scale=1.0" />
     @include('partials.style')
   </head>
+  @vite('resources/js/app.js')
   <body class="bg-gray-100">
     @include('partials.header')
 
@@ -21,7 +22,9 @@
         </div>
     @endif
 
-    @yield('content')
+    {{-- <div id="app"> --}}
+      @yield('content')
+    {{-- </div> --}}
 
     @include('partials.footer')
   </body>
