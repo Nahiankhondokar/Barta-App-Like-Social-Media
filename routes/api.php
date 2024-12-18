@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\API\Post\PostInteractionController;
 use App\Http\Controllers\API\v1\Auth\AuthController;
 use App\Http\Controllers\API\v1\Post\PostController;
 use App\Http\Controllers\API\v1\User\UserController;
 use App\Http\Controllers\DashboardController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -21,12 +21,13 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.st
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 
-Route::middleware('auth:sanctum')->group(function(){
+// Route::middleware('auth:sanctum')->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/me', [AuthController::class, 'me'])->name('me');
 
     Route::resource('post', PostController::class);
+    Route::post('/post-search', [UserController::class, 'search'])->name('search');
 
     Route::prefix('profile')->name('profile.')->group(function(){
         Route::get('/', [UserController::class, 'index'])->name('index');
@@ -34,5 +35,8 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('/update/{user}', [UserController::class, 'update'])->name('update');
     });
 
-    Route::post('/post-search', [UserController::class, 'search'])->name('search');
-});
+    Route::prefix('post')->group(function(){
+        Route::get('/likes', [PostInteractionController::class, "likeList"]);
+    });
+
+// });
