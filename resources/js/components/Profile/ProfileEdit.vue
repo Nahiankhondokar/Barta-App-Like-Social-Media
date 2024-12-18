@@ -21,7 +21,7 @@ function handleImageUpload(e) {
     URL.revokeObjectURL(file); // security perpouse
 
     if (file) {
-        editProfile.value.image = file;
+        editProfile.value.newImage = file;
     }
 }
 
@@ -33,8 +33,8 @@ const handleProfileUpdate = async () => {
     formData.append("bio", editProfile.value.bio);
     formData.append("password", editProfile.value.password);
 
-    if (editProfile.value.image) {
-        formData.append("image", editProfile.value.image);
+    if (editProfile.value.newImage) {
+        formData.append("newImage", editProfile.value.newImage);
     }
 
     await axios
@@ -50,7 +50,7 @@ const handleProfileUpdate = async () => {
             router.push({ name: "Dashboard" });
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         });
 };
 
@@ -60,6 +60,7 @@ const getUserProfile = () => {
         .then(function (response) {
             editProfile.value = response.data.data;
             editProfile.value.password = "";
+            editProfile.value.newImage = "";
         })
         .catch(function (error) {
             unAuthenticateUser(error.status);
@@ -104,7 +105,7 @@ onMounted(() => {
                                     @change="handleImageUpload()"
                                 />
                                 <!-- Uncomment this image tag if required -->
-                                <img 
+                                <img
                                     :src="
                                         baseUrl + editProfile.image ?? NoImage
                                     "

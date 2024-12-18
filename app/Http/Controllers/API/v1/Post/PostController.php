@@ -33,7 +33,7 @@ class PostController extends Controller
            if($request->hasFile('image')){
                 $file = $request->file('image');
                 $fileName = md5(rand().time()).'.'.$file->extension();
-                $pathWithFile = 'storage/'.$file->storePubliclyAs('post', $fileName, 'public');
+                $pathWithFile = $file->storePubliclyAs('post', $fileName, 'public');
             }
 
             $post = Post::query()->create([
@@ -51,9 +51,6 @@ class PostController extends Controller
 
     public function show(Post $post): JsonResponse
     {
-        if(auth()->user()->id != $post->user_id){
-            return $this->sendApiResponse('', 'Invalid user!');
-        }
         return $this->sendApiResponse($post->load('user'), "Post details");
     }
 
@@ -81,7 +78,7 @@ class PostController extends Controller
 
             $file = $request->file('image');
             $fileName = md5(rand().time()).'.'.$file->extension();
-            $pathWithFile = 'storage/'.$file->storePubliclyAs('post', $fileName, 'public');
+            $pathWithFile = $file->storePubliclyAs('post', $fileName, 'public');
             
         }else {
             $pathWithFile = $post->image;

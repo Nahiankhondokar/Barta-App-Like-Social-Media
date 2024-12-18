@@ -1,9 +1,7 @@
 <script setup>
-const props = defineProps({
-    authUser: {
-        type: Object,
-    },
-});
+import { inject } from "vue";
+
+const authUser = inject("authUser");
 </script>
 
 <template>
@@ -30,11 +28,9 @@ const props = defineProps({
                 <!-- User Meta -->
                 <div>
                     <h1 class="font-bold md:text-2xl">
-                        {{ props.authUser.name }}
+                        {{ authUser.name }}
                     </h1>
-                    <p class="text-gray-700">
-                        {{ props.authUser.username }} 💻
-                    </p>
+                    <p class="text-gray-700">{{ authUser.username }} 💻</p>
                 </div>
                 <!-- / User Meta -->
             </div>
@@ -68,7 +64,7 @@ const props = defineProps({
                 :to="{
                     name: 'ProfileEdit',
                     params: {
-                        id: props?.authUser?.id ?? 0,
+                        id: authUser?.id,
                     },
                 }"
                 type="button"

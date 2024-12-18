@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
@@ -11,16 +11,11 @@ const id = route.params.id;
 let viewPost = ref({});
 let postId = ref(null);
 const $toast = useToast();
+const authUser = inject("authUser");
 
 const handlePostDropDown = (key = null) => {
     postId.value = postId.value != null ? null : key;
 };
-
-const props = defineProps({
-    authUser: {
-        type: Object,
-    },
-});
 
 const handlePostDelete = async (id) => {
     const formData = new FormData();
@@ -65,7 +60,7 @@ onMounted(() => {
                             <!-- User Avatar -->
                             <div class="flex-shrink-0">
                                 <ImageShow
-                                    :image="props?.authUser.image"
+                                    :image="viewPost?.image"
                                     css="h-12 w-12 rounded-full"
                                 />
                             </div>
@@ -95,7 +90,7 @@ onMounted(() => {
                         <!-- Card Action Dropdown -->
                         <div
                             class="flex flex-shrink-0 self-center"
-                            v-if="viewPost.user_id == props.authUser.id"
+                            v-if="viewPost.user_id == authUser.id"
                         >
                             <div class="relative inline-block text-left">
                                 <div>

@@ -3,7 +3,10 @@ import { computed, inject, onMounted, reactive, ref, watch } from "vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import { useToast } from "vue-toast-notification";
 import NoImage from "./../../../../public/assets/image/no-img/no-img.jpg";
-import { authenticationCheck } from "../../middleware/authentication";
+import {
+    authenticationCheck,
+    unAuthenticateUser,
+} from "../../middleware/authentication";
 
 const $toast = useToast();
 let imageUrl = ref(null);
@@ -53,12 +56,15 @@ const handlePostSubmit = async () => {
         })
         .catch(function (error) {
             errors.value = error.response.data.errors;
-            console.log(error);
+            $toast.success(error.response.data.message);
+            unAuthenticateUser(401);
         });
 };
 
-watch(authUser, (newData, oldData)=> {
-    placeholderMsg.value = `Hello, what's going on, ${newData?.name || "Guest"}?`
+watch(authUser, (newData, oldData) => {
+    placeholderMsg.value = `Hello, what's going on, ${
+        newData?.name || "Guest"
+    }?`;
 });
 
 onMounted(async () => {

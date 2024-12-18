@@ -9,6 +9,7 @@ use App\Traits\sendApiResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -28,17 +29,21 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if($request->hasFile('image')){
-            $file = $request->file('image');
-            $fileName = md5(rand().time()).'.'.$file->extension();
-            $pathWithFile = 'storage/'.$file->storePubliclyAs('profile', $fileName, 'public');
+        if($request->hasFile('newImage')){
+            Storage::disk('public')->delete($user->image);
+            $file = $request->file('newImage');
+            $fileName = md5(rand().time()).'.'.$file->getClientOriginalExtension();
+            $pathWithFile = $file->storePubliclyAs('profile', $fileName, 'public');
+
+        }else {
+            $pathWithFile = $user->image;
         }
 
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->bio      = $request->bio;
         $user->username = $request->username;
-        $user->image    = $pathWithFile ?? null;
+        $user->image    = $pathWithFile;
         $user->update();
 
         if(!empty($request->password)){

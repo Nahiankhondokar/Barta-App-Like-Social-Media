@@ -28,11 +28,11 @@ const handlePostDelete = async (id) => {
     await axios
         .delete(`/api/post/${id}`)
         .then(function (response) {
-            $toast.success(response.data.message);
+            $toast.info(response.data.message);
             showAllPost();
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         });
 };
 
