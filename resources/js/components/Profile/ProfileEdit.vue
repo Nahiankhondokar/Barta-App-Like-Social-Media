@@ -104,7 +104,7 @@ onMounted(() => {
                                     @change="handleImageUpload()"
                                 />
                                 <!-- Uncomment this image tag if required -->
-                                <img
+                                <img 
                                     :src="
                                         baseUrl + editProfile.image ?? NoImage
                                     "
