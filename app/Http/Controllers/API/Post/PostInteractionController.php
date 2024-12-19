@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\Post;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CommentMail;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
@@ -11,6 +12,7 @@ use App\Notifications\LikeNotification;
 use App\Traits\sendApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PostInteractionController extends Controller
 {
@@ -52,7 +54,7 @@ class PostInteractionController extends Controller
 
     public function commentStore(Request $request): JsonResponse
     {
-        $likes = Comment::query()->updateOrCreate([
+        $comment = Comment::query()->updateOrCreate([
             'user_id'       => $request->user_id,
             'post_id'       => $request->post_id,
         ],[
@@ -60,7 +62,12 @@ class PostInteractionController extends Controller
             'comment_message'   => $request->comment_message,
         ]);
 
-        return $this->sendApiResponse($likes, "Commented a post successfully");
+        $post = Post::find($request->post_id);
+        $user = User::find($request->user_id);
+
+        Mail::to($user)->send(new CommentMail($user, $post, $comment));
+
+        return $this->sendApiResponse($comment, "Commented a post successfully");
     }
 
     public function commentDelete(Request $request, $id): JsonResponse
