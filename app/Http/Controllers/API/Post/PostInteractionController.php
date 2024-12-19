@@ -41,8 +41,6 @@ class PostInteractionController extends Controller
             $message = Like::UNLIKE;
         }
 
-        $message = $request->like_status == Like::LIKE ? "Like" : "Unlike";
-
         return $this->sendApiResponse($likes, "$message a post successfully");
     }
 
