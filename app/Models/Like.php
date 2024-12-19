@@ -9,13 +9,13 @@ class Like extends Model
 {
     protected $guarded = [];
 
-    public function post(): HasMany
+    public function posts(): HasMany
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Post::class, 'id', 'post_id');
     }
 
-    public function user(): HasMany
+    public function users(): HasMany
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(User::class, 'id', 'user_id');
     }
 }

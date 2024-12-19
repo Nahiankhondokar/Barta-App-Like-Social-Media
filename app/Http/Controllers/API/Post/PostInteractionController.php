@@ -14,7 +14,7 @@ class PostInteractionController extends Controller
 
     public function likeList(): JsonResponse
     {
-        $likes = Like::all();
+        $likes = Like::query()->with('posts', 'users')->get();
         return $this->sendApiResponse($likes, "Like list show");
     }
 
@@ -29,4 +29,6 @@ class PostInteractionController extends Controller
 
         return $this->sendApiResponse($likes, "Liked a post successfully");
     }
+
+
 }
