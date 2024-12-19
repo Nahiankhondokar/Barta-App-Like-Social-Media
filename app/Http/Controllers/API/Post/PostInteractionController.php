@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API\Post;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\Post;
+use App\Models\User;
+use App\Notifications\LikeNotification;
 use App\Traits\sendApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,12 +31,22 @@ class PostInteractionController extends Controller
             'like_status'   => $request->like_status,
         ]);
 
+        $post = Post::find($request->post_id);
+        $user = User::find($request->user_id);
+
+        if($request->like_status == Like::LIKE){
+            $message = Like::LIKE;
+            $user->notify(new LikeNotification($post, $user));
+        }else {
+            $message = Like::UNLIKE;
+        }
+
         $message = $request->like_status == Like::LIKE ? "Like" : "Unlike";
 
         return $this->sendApiResponse($likes, "$message a post successfully");
     }
 
-    public function commentList(): JsonResponse
+    public function commentList(Request $request): JsonResponse
     {
         $likes = Comment::query()->with('posts', 'users')->get();
         return $this->sendApiResponse($likes, "Comment list show");
