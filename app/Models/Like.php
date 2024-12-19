@@ -9,6 +9,9 @@ class Like extends Model
 {
     protected $guarded = [];
 
+    const LIKE = 1;
+    const UNLIKE = 0;
+
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'id', 'post_id');

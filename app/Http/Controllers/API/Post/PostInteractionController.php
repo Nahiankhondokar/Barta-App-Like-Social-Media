@@ -19,7 +19,7 @@ class PostInteractionController extends Controller
         return $this->sendApiResponse($likes, "Like list show");
     }
 
-    public function likedStore(Request $request): JsonResponse
+    public function likeUnlike(Request $request): JsonResponse
     {
         $likes = Like::query()->updateOrCreate([
             'user_id'       => $request->user_id,
@@ -28,7 +28,9 @@ class PostInteractionController extends Controller
             'like_status'   => $request->like_status,
         ]);
 
-        return $this->sendApiResponse($likes, "Liked a post successfully");
+        $message = $request->like_status == Like::LIKE ? "Like" : "Unlike";
+
+        return $this->sendApiResponse($likes, "$message a post successfully");
     }
 
     public function commentList(): JsonResponse
@@ -48,6 +50,17 @@ class PostInteractionController extends Controller
         ]);
 
         return $this->sendApiResponse($likes, "Commented a post successfully");
+    }
+
+    public function commentDelete(Request $request, $id): JsonResponse
+    {
+        $comment = Comment::find($id);
+        if(!$comment){
+            return $this->sendApiResponse('', "Comment not found!");
+        }
+        $comment->delete();
+
+        return $this->sendApiResponse('', "Commented deleted successfully");
     }
 
 }
