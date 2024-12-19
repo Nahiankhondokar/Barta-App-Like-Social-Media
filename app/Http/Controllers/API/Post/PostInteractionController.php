@@ -14,11 +14,11 @@ class PostInteractionController extends Controller
 
     public function likeList(): JsonResponse
     {
-        $likes = Like::query()->with('post', 'user')->get();
+        $likes = Like::all();
         return $this->sendApiResponse($likes, "Like list show");
     }
 
-    public function liked(Request $request): JsonResponse
+    public function likedStore(Request $request): JsonResponse
     {
         $likes = Like::query()->updateOrCreate([
             'user_id'       => $request->user_id,

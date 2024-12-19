@@ -35,8 +35,9 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/update/{user}', [UserController::class, 'update'])->name('update');
     });
 
-    Route::prefix('post')->group(function(){
+    Route::prefix('post-reacts')->group(function(){
         Route::get('/likes', [PostInteractionController::class, "likeList"]);
+        Route::post('/liked-store', [PostInteractionController::class, "likedStore"]);
     });
 
 // });

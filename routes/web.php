@@ -8,8 +8,4 @@ Route::get('/', function(){
     return view('spa');
 });
 
-Route::prefix('post')->group(function(){
-    Route::post('/liked', [PostInteractionController::class, "liked"]);
-});
-
-// Route::view('/{any}', 'spa')->where('any', '.*');
+Route::view('/{any}', 'spa')->where('any', '.*');
