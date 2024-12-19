@@ -38,6 +38,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::prefix('post-reacts')->group(function(){
         Route::get('/likes', [PostInteractionController::class, "likeList"]);
         Route::post('/like-store', [PostInteractionController::class, "likedStore"]);
+        Route::get('/comments', [PostInteractionController::class, "commentList"]);
+        Route::post('/comment-store', [PostInteractionController::class, "commentStore"]);
     });
 
 // });
