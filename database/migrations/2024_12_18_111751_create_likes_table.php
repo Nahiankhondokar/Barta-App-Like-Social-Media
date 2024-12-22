@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('post_id');
             $table->foreignId('user_id');
             $table->tinyInteger('like_status')->default(0);
-            $table->bigInteger('count')->nullable();
+            $table->bigInteger('count')->default(0);
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

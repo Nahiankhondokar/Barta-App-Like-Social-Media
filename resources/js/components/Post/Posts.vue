@@ -7,6 +7,7 @@ import moment from "moment";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
 import { authenticationCheck } from "../../middleware/authentication";
+// import LikeIcon from "./../../../../public/assets/icons/like.svg";
 
 const authUser = inject("authUser");
 const searchResponse = inject("posts");
@@ -243,7 +244,34 @@ onMounted(() => {
                 <footer class="border-t border-gray-200 pt-2">
                     <!-- Card Bottom Action Buttons -->
                     <div class="flex items-center justify-between">
-                        <div class="flex gap-8 text-gray-600">
+                        <div class="flex gap-8 text-gray-600 justify-between">
+                            <!-- Like Button -->
+                          
+                            <a 
+                                v-if="post?.like == null || post?.like?.like_status == 0"
+                                href="#"
+                                type="button"
+                                class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
+                            >
+                                <span class="sr-only">Like</span>
+                               <img class="w-5" src="https://www.svgrepo.com/show/1198/like.svg" alt="">
+
+                                <!-- <p>0</p> -->
+                            </a>
+                            <!-- /Like Button -->
+
+                            <!-- /Unlike Button -->
+                            <a
+                            v-if="post?.like?.like_status == 1"
+                                href="#"
+                                type="button"
+                                class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
+                            >
+                               <img class="w-5" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/blue-like-button-icon.png" alt="">
+                            </a>
+                            <!-- /Unlike Button -->
+                        </div>
+                        <div class="flex gap-8 text-gray-600 justify-between">
                             <!-- Comment Button -->
                             <a
                                 href="./single.html"

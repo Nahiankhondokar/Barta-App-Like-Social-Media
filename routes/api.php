@@ -21,7 +21,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.st
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 
-// Route::middleware('auth:sanctum')->group(function(){
+Route::middleware('auth:sanctum')->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/me', [AuthController::class, 'me'])->name('me');
@@ -44,4 +44,4 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::get('/comment-delete/{id}', [PostInteractionController::class, "commentDelete"]);
     });
 
-// });
+});

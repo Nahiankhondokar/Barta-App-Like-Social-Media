@@ -20,7 +20,7 @@ class PostController extends Controller
     public function index($pageNum = 5)
     {
         $posts = Post::query()
-        ->with('user')
+        ->with('user', 'like')
         ->orderBy('id', 'desc')
         ->paginate($pageNum);
 

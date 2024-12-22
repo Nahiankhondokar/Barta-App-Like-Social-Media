@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->string('comment_message');
             $table->tinyInteger('comment_status')->default(0);
+            $table->bigInteger('count')->default(0);
             $table->boolean('status')->default(false);
             $table->timestamps();
         });
