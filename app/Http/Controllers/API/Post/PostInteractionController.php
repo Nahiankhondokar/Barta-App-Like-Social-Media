@@ -26,7 +26,7 @@ class PostInteractionController extends Controller
 
     public function likeUnlike(Request $request): JsonResponse
     {
-        $likes = Like::query()->updateOrCreate([
+        $like = Like::query()->updateOrCreate([
             'user_id'       => $request->user_id,
             'post_id'       => $request->post_id,
         ],[
@@ -36,14 +36,14 @@ class PostInteractionController extends Controller
         $post = Post::find($request->post_id);
         $user = User::find($request->user_id);
 
-        if($request->like_status == Like::LIKE){
-            $message = Like::LIKE;
+        if($like->like_status == Like::LIKE){
+            $message = "Like";
             $user->notify(new LikeNotification($post, $user));
         }else {
-            $message = Like::UNLIKE;
+            $message = "Unlike";
         }
 
-        return $this->sendApiResponse($likes, "$message a post successfully");
+        return $this->sendApiResponse($like, "$message a post successfully");
     }
 
     public function commentList(Request $request): JsonResponse

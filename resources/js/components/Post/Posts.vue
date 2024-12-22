@@ -61,6 +61,25 @@ const handlePostPagination = async () => {
         });
 };
 
+const handlePostUnlike = (userId, postId, likeStatus) => {
+
+    const formData = new FormData();
+    formData.append('user_id', userId);
+    formData.append('post_id', postId);
+    formData.append('like_status', likeStatus);
+
+    axios
+    .post(`/api/post-reacts/like-unlike-store`, formData)
+    .then(function (response) {
+        showAllPost();
+        $toast.success(response.data.message);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+}
+
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
         allPost.value = newData;
@@ -250,6 +269,7 @@ onMounted(() => {
                             <a 
                                 v-if="post?.like == null || post?.like?.like_status == 0"
                                 href="#"
+                                @click.prevent="handlePostUnlike(post.user.id, post.id, 1)"
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
@@ -262,8 +282,9 @@ onMounted(() => {
 
                             <!-- /Unlike Button -->
                             <a
-                            v-if="post?.like?.like_status == 1"
+                                v-if="post?.like?.like_status == 1"
                                 href="#"
+                                @click.prevent="handlePostUnlike(post?.user.id, post.id, 0)"
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
