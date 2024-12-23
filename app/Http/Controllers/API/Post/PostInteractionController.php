@@ -46,13 +46,13 @@ class PostInteractionController extends Controller
         return $this->sendApiResponse($like, "$message a post successfully");
     }
 
-    public function commentList(Request $request, $limit = 2): JsonResponse
+    public function commentList(Request $request, $limit = 5): JsonResponse
     {
         $comment = Comment::query()
         ->with('posts', 'users')
         ->orderBy('id', 'desc')
         ->paginate($limit);
-        
+
         return $this->sendApiResponse($comment, "Comment list show");
     }
 
@@ -69,7 +69,7 @@ class PostInteractionController extends Controller
         $post = Post::find($request->post_id);
         $user = User::find($request->user_id);
 
-        Mail::to($user)->send(new CommentMail($user, $post, $comment));
+        // Mail::to($user)->send(new CommentMail($user, $post, $comment));
 
         return $this->sendApiResponse($comment, "Commented a post successfully");
     }

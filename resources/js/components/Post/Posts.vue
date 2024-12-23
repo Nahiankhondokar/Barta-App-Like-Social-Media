@@ -17,7 +17,7 @@ let postId = ref(null);
 let currentPage = ref(0);
 let lastPage = ref(0);
 const $toast = useToast();
-const commentArea = ref(false);
+const commentArea = ref(0);
 const commentForm = ref({
     comment_message: "",
 });
@@ -85,7 +85,9 @@ const handlePostUnlike = (userId, postId, likeStatus) => {
     axios
         .post(`/api/post-reacts/like-unlike-store`, formData)
         .then(function (response) {
+            commentArea.value = true;
             showAllPost();
+            showAllComment();
             $toast.success(response.data.message);
         })
         .catch(function (error) {
@@ -104,6 +106,7 @@ const handleWriteComment = (userId, postId, commentStatus) => {
         .post(`/api/post-reacts/comment-store`, formData)
         .then(function (response) {
             showAllPost();
+            showAllComment();
             $toast.success(response.data.message);
             commentForm.value.comment_message = "";
         })
@@ -346,7 +349,7 @@ onMounted(() => {
                             <!-- Comment Button -->
                             <a
                                 href="#"
-                                @click.prevent="commentArea = !commentArea"
+                                @click.prevent="commentArea = post.id"
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
@@ -373,15 +376,19 @@ onMounted(() => {
                     </div>
 
                     <!-- Comment Write -->
-                    <div class="my-2" v-if="commentArea">
+                    <div class="my-2" v-if="commentArea == post.id">
+                        <hr />
                         <!-- Comment show area -->
-                        <header>
-                            <div class="flex items-center justify-between">
+                        <header v-for="comment in allComment">
+                            <div
+                                v-if="comment.post_id == post.id"
+                                class="flex items-center justify-between"
+                            >
                                 <div class="flex items-center space-x-3">
                                     <!-- User Avatar -->
                                     <div class="flex-shrink-0">
                                         <ImageShow
-                                            :image="post?.user?.image"
+                                            :image="comment?.users?.image"
                                             css="h-10 w-10 rounded-full object-cover"
                                         />
                                     </div>
@@ -395,25 +402,15 @@ onMounted(() => {
                                             :to="{
                                                 name: 'Profile',
                                                 params: {
-                                                    id: authUser?.id ?? 0,
+                                                    id: authUser?.id,
                                                 },
                                             }"
                                             class="hover:underline font-semibold line-clamp-1"
                                         >
-                                            {{ post.user.name }}
+                                            {{ comment.users.name }}
                                         </router-link>
 
-                                        <router-link
-                                            :to="{
-                                                name: 'Profile',
-                                                params: {
-                                                    id: authUser?.id ?? 0,
-                                                },
-                                            }"
-                                            class="hover:underline text-sm text-gray-500 line-clamp-1"
-                                        >
-                                            {{ post.user.email }}
-                                        </router-link>
+                                        <p>{{ comment.comment_message }}</p>
                                     </div>
                                     <!-- /User Info -->
                                 </div>
@@ -421,7 +418,7 @@ onMounted(() => {
                                 <!-- Comment delete -->
                                 <div
                                     class="flex flex-shrink-0 self-center"
-                                    v-if="post.user.id == authUser.id"
+                                    v-if="comment.users.id == authUser.id"
                                 >
                                     <button class="w-5">
                                         <img
@@ -436,7 +433,11 @@ onMounted(() => {
                         <!-- /Comment show area -->
                         <form
                             @submit.prevent="
-                                handleWriteComment(post?.user.id, post.id, 1)
+                                handleWriteComment(
+                                    comment?.users.id,
+                                    post.id,
+                                    1
+                                )
                             "
                         >
                             <textarea
