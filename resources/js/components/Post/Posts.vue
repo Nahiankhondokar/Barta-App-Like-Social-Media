@@ -7,7 +7,6 @@ import moment from "moment";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
 import { authenticationCheck } from "../../middleware/authentication";
-// import LikeIcon from "./../../../../public/assets/icons/like.svg";
 
 const authUser = inject("authUser");
 const searchResponse = inject("posts");
@@ -17,6 +16,10 @@ let postId = ref(null);
 let currentPage = ref(0);
 let lastPage = ref(0);
 const $toast = useToast();
+const commentArea = ref(false);
+const commentForm = ref({
+    comment_message: "",
+});
 
 const handlePostDropDown = (key = null) => {
     postId.value = postId.value != null ? null : key;
@@ -45,7 +48,7 @@ const showAllPost = async () => {
             lastPage.value = response.last_page;
         })
         .catch((error) => {
-            console.log(error);
+            $toast.error(error.response.data.message);
         });
 };
 
@@ -57,28 +60,46 @@ const handlePostPagination = async () => {
             allPost.value.push(...response.data.data);
         })
         .catch(function (error) {
-            console.log(error);
+            $toast.error(error.response.data.message);
         });
 };
 
 const handlePostUnlike = (userId, postId, likeStatus) => {
-
     const formData = new FormData();
-    formData.append('user_id', userId);
-    formData.append('post_id', postId);
-    formData.append('like_status', likeStatus);
+    formData.append("user_id", userId);
+    formData.append("post_id", postId);
+    formData.append("like_status", likeStatus);
 
     axios
-    .post(`/api/post-reacts/like-unlike-store`, formData)
-    .then(function (response) {
-        showAllPost();
-        $toast.success(response.data.message);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+        .post(`/api/post-reacts/like-unlike-store`, formData)
+        .then(function (response) {
+            showAllPost();
+            $toast.success(response.data.message);
+        })
+        .catch(function (error) {
+            $toast.error(error.response.data.message);
+        });
+};
 
-}
+const handleWriteComment = (userId, postId, commentStatus) => {
+    const formData = new FormData();
+    formData.append("user_id", userId);
+    formData.append("post_id", postId);
+    formData.append("comment_status", commentStatus);
+    formData.append("comment_message", commentForm.value.comment_message);
+
+    axios
+        .post(`/api/post-reacts/comment-store`, formData)
+        .then(function (response) {
+            showAllPost();
+            $toast.success(response.data.message);
+            commentForm.value.comment_message = "";
+        })
+        .catch(function (error) {
+            $toast.error(error.response.data.message);
+            $toast.error(error.response.data.message);
+        });
+};
 
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
@@ -265,16 +286,25 @@ onMounted(() => {
                     <div class="flex items-center justify-between">
                         <div class="flex gap-8 text-gray-600 justify-between">
                             <!-- Like Button -->
-                          
-                            <a 
-                                v-if="post?.like == null || post?.like?.like_status == 0"
+
+                            <a
+                                v-if="
+                                    post?.like == null ||
+                                    post?.like?.like_status == 0
+                                "
                                 href="#"
-                                @click.prevent="handlePostUnlike(post.user.id, post.id, 1)"
+                                @click.prevent="
+                                    handlePostUnlike(post.user.id, post.id, 1)
+                                "
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
                                 <span class="sr-only">Like</span>
-                               <img class="w-5" src="https://www.svgrepo.com/show/1198/like.svg" alt="">
+                                <img
+                                    class="w-5"
+                                    src="https://www.svgrepo.com/show/1198/like.svg"
+                                    alt=""
+                                />
 
                                 <!-- <p>0</p> -->
                             </a>
@@ -284,11 +314,17 @@ onMounted(() => {
                             <a
                                 v-if="post?.like?.like_status == 1"
                                 href="#"
-                                @click.prevent="handlePostUnlike(post?.user.id, post.id, 0)"
+                                @click.prevent="
+                                    handlePostUnlike(post?.user.id, post.id, 0)
+                                "
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
-                               <img class="w-5" src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/blue-like-button-icon.png" alt="">
+                                <img
+                                    class="w-5"
+                                    src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/blue-like-button-icon.png"
+                                    alt=""
+                                />
                             </a>
                             <!-- /Unlike Button -->
                         </div>
@@ -296,7 +332,8 @@ onMounted(() => {
                         <div class="flex gap-8 text-gray-600 justify-between">
                             <!-- Comment Button -->
                             <a
-                                href="./single.html"
+                                href="#"
+                                @click.prevent="commentArea = !commentArea"
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
@@ -316,15 +353,40 @@ onMounted(() => {
                                     ></path>
                                 </svg>
 
-                                <p>0</p>
+                                <!-- <p>0</p> -->
                             </a>
                             <!-- /Comment Button -->
-                            
                         </div>
                     </div>
-                    <div class="border-2 border-gray-500 w-full mt-3 rounded-md">
-                        <textarea name="" id="" class="w-full focus:ring-0 focus:ring-offset-0"></textarea>
+
+                    <!-- Comment Write -->
+                    <div class="" v-if="commentArea">
+                        <form
+                            @submit.prevent="
+                                handleWriteComment(post?.user.id, post.id, 1)
+                            "
+                        >
+                            <textarea
+                                name=""
+                                v-model="commentForm.comment_message"
+                                id=""
+                                class="w-full p-1 outline-none border-2 border-gray-500 w-full mt-3 rounded-lg"
+                                placeholder="Write your comment..."
+                            ></textarea>
+
+                            <button
+                                class="bg-slate-300 py-1 px-2 rounded-sm shadow-lg flex justify-self-end"
+                                type="submit"
+                            >
+                                <img
+                                    src="https://cdn2.iconfinder.com/data/icons/arrow-vol-2-8/64/Send_Button-512.png"
+                                    alt=""
+                                    class="w-5"
+                                />
+                            </button>
+                        </form>
                     </div>
+                    <!-- /Comment Write -->
 
                     <!-- /Card Bottom Action Buttons -->
                 </footer>

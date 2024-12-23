@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use SplSubject;
 
-class CommentMail extends Mailable
+class CommentMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
