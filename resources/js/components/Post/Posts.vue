@@ -292,6 +292,7 @@ onMounted(() => {
                             </a>
                             <!-- /Unlike Button -->
                         </div>
+
                         <div class="flex gap-8 text-gray-600 justify-between">
                             <!-- Comment Button -->
                             <a
@@ -318,8 +319,13 @@ onMounted(() => {
                                 <p>0</p>
                             </a>
                             <!-- /Comment Button -->
+                            
                         </div>
                     </div>
+                    <div class="border-2 border-gray-500 w-full mt-3 rounded-md">
+                        <textarea name="" id="" class="w-full focus:ring-0 focus:ring-offset-0"></textarea>
+                    </div>
+
                     <!-- /Card Bottom Action Buttons -->
                 </footer>
                 <!-- /Barta Card Bottom -->
