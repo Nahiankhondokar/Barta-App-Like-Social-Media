@@ -46,10 +46,14 @@ class PostInteractionController extends Controller
         return $this->sendApiResponse($like, "$message a post successfully");
     }
 
-    public function commentList(Request $request): JsonResponse
+    public function commentList(Request $request, $limit = 2): JsonResponse
     {
-        $likes = Comment::query()->with('posts', 'users')->get();
-        return $this->sendApiResponse($likes, "Comment list show");
+        $comment = Comment::query()
+        ->with('posts', 'users')
+        ->orderBy('id', 'desc')
+        ->paginate($limit);
+        
+        return $this->sendApiResponse($comment, "Comment list show");
     }
 
     public function commentStore(Request $request): JsonResponse

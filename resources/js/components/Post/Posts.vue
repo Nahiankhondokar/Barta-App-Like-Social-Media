@@ -12,6 +12,7 @@ const authUser = inject("authUser");
 const searchResponse = inject("posts");
 
 let allPost = ref([]);
+let allComment = ref([]);
 let postId = ref(null);
 let currentPage = ref(0);
 let lastPage = ref(0);
@@ -48,6 +49,17 @@ const showAllPost = async () => {
             lastPage.value = response.last_page;
         })
         .catch((error) => {
+            $toast.error(error.response.data.message);
+        });
+};
+
+const showAllComment = async () => {
+    await axios
+        .get(`/api/post-reacts/comments`)
+        .then(function (response) {
+            allComment.value = response.data.data;
+        })
+        .catch(function (error) {
             $toast.error(error.response.data.message);
         });
 };
@@ -109,6 +121,7 @@ watch(searchResponse, (newData, oldData) => {
 
 onMounted(() => {
     showAllPost();
+    showAllComment();
     authenticationCheck();
 });
 </script>
@@ -360,7 +373,67 @@ onMounted(() => {
                     </div>
 
                     <!-- Comment Write -->
-                    <div class="" v-if="commentArea">
+                    <div class="my-2" v-if="commentArea">
+                        <!-- Comment show area -->
+                        <header>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <!-- User Avatar -->
+                                    <div class="flex-shrink-0">
+                                        <ImageShow
+                                            :image="post?.user?.image"
+                                            css="h-10 w-10 rounded-full object-cover"
+                                        />
+                                    </div>
+                                    <!-- /User Avatar -->
+
+                                    <!-- User Info -->
+                                    <div
+                                        class="text-gray-900 flex flex-col min-w-0 flex-1"
+                                    >
+                                        <router-link
+                                            :to="{
+                                                name: 'Profile',
+                                                params: {
+                                                    id: authUser?.id ?? 0,
+                                                },
+                                            }"
+                                            class="hover:underline font-semibold line-clamp-1"
+                                        >
+                                            {{ post.user.name }}
+                                        </router-link>
+
+                                        <router-link
+                                            :to="{
+                                                name: 'Profile',
+                                                params: {
+                                                    id: authUser?.id ?? 0,
+                                                },
+                                            }"
+                                            class="hover:underline text-sm text-gray-500 line-clamp-1"
+                                        >
+                                            {{ post.user.email }}
+                                        </router-link>
+                                    </div>
+                                    <!-- /User Info -->
+                                </div>
+
+                                <!-- Comment delete -->
+                                <div
+                                    class="flex flex-shrink-0 self-center"
+                                    v-if="post.user.id == authUser.id"
+                                >
+                                    <button class="w-5">
+                                        <img
+                                            src="https://cdn-icons-png.flaticon.com/512/6861/6861362.png"
+                                            alt=""
+                                        />
+                                    </button>
+                                </div>
+                                <!-- /Comment delete -->
+                            </div>
+                        </header>
+                        <!-- /Comment show area -->
                         <form
                             @submit.prevent="
                                 handleWriteComment(post?.user.id, post.id, 1)
