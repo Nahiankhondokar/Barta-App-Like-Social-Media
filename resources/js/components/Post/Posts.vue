@@ -116,6 +116,19 @@ const handleWriteComment = (userId, postId, commentStatus) => {
         });
 };
 
+const handleCommentDelete = async (id) => {
+    await axios
+        .get(`/api/post-reacts/comment-delete/${id}`)
+        .then(function (response) {
+            showAllComment();
+            $toast.success(response.data.message);
+        })
+        .catch(function (error) {
+            $toast.error(error.response.data.message);
+            console.log(error.response.data)
+        });
+}
+
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
         allPost.value = newData;
@@ -420,7 +433,7 @@ onMounted(() => {
                                     class="flex flex-shrink-0 self-center"
                                     v-if="comment.users.id == authUser.id"
                                 >
-                                    <button class="w-5">
+                                    <button class="w-5" @click="handleCommentDelete(comment.id)">
                                         <img
                                             src="https://cdn-icons-png.flaticon.com/512/6861/6861362.png"
                                             alt=""
