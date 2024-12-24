@@ -20,6 +20,7 @@ export const unAuthenticateUser = (statusCode) => {
 
 export const authUser = ref({});
 export const authenticationCheck = async ()=> {
+    authUser.value = {};
     return await axios
         .get("/api/me")
         .then((response)=> {
