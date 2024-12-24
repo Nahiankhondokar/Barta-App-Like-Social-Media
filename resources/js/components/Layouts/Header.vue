@@ -17,7 +17,6 @@ const handleUserLogout = () => {
             router.push({ name: "Login" });
             localStorage.removeItem("loggedIn");
             $toast.success(response.data.message);
-            authUser.value = {};
         })
         .catch(function (error) {
             console.log(error);
