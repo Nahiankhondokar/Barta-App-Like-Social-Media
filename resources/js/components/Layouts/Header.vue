@@ -19,7 +19,7 @@ const handleUserLogout = () => {
             $toast.success(response.data.message);
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         });
 };
 
@@ -33,7 +33,7 @@ const handlePostSearch = async (e) => {
             search.value = response.data.data;
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(error.response.data.message);
         });
 };
 

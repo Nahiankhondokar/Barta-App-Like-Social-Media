@@ -112,7 +112,22 @@ const handleWriteComment = (userId, postId, commentStatus) => {
         })
         .catch(function (error) {
             $toast.error(error.response.data.message);
-            console.log(error.response.data)
+            console.log(error.response.data.message);
+        });
+};
+
+const handleCommentDelete = (id) => {
+    axios
+        .get(`/api/post-reacts/comment-delete/${id}`)
+        .then(function (response) {
+            // showAllPost();
+            showAllComment();
+            $toast.success(response.data.message);
+            commentForm.value.comment_message = "";
+        })
+        .catch(function (error) {
+            $toast.error(error.response.data.message);
+            console.log(error.response.data.message);
         });
 };
 
@@ -349,7 +364,6 @@ onMounted(() => {
                             <!-- Comment Button -->
                             <a
                                 href="javascript:void(0)"
-                              
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
@@ -382,7 +396,7 @@ onMounted(() => {
                         <header v-for="comment in allComment">
                             <div
                                 v-if="comment.post_id == post.id"
-                                class="flex items-center justify-between my-1 p-2  bg-gray-100 rounded-lg"
+                                class="flex items-center justify-between my-1 p-2 bg-gray-100 rounded-lg"
                             >
                                 <div class="flex items-center space-x-3">
                                     <!-- User Avatar -->
@@ -420,7 +434,10 @@ onMounted(() => {
                                     class="flex flex-shrink-0 self-center"
                                     v-if="comment.users.id == authUser.id"
                                 >
-                                    <button class="w-5">
+                                    <button
+                                        class="w-5"
+                                        @click="handleCommentDelete(comment.id)"
+                                    >
                                         <img
                                             src="https://cdn-icons-png.flaticon.com/512/6861/6861362.png"
                                             alt=""
@@ -433,11 +450,7 @@ onMounted(() => {
                         <!-- /Comment show area -->
                         <form
                             @submit.prevent="
-                                handleWriteComment(
-                                    authUser.id,
-                                    post.id,
-                                    1
-                                )
+                                handleWriteComment(authUser.id, post.id, 1)
                             "
                         >
                             <textarea
