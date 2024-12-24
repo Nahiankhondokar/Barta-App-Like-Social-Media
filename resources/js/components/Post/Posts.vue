@@ -112,7 +112,7 @@ const handleWriteComment = (userId, postId, commentStatus) => {
         })
         .catch(function (error) {
             $toast.error(error.response.data.message);
-            $toast.error(error.response.data.message);
+            console.log(error.response.data)
         });
 };
 
@@ -348,8 +348,8 @@ onMounted(() => {
                         <div class="flex gap-8 text-gray-600 justify-between">
                             <!-- Comment Button -->
                             <a
-                                href="#"
-                                @click.prevent="commentArea = post.id"
+                                href="javascript:void(0)"
+                              
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
                             >
@@ -376,13 +376,13 @@ onMounted(() => {
                     </div>
 
                     <!-- Comment Write -->
-                    <div class="my-2" v-if="commentArea == post.id">
+                    <div class="my-2">
                         <hr />
                         <!-- Comment show area -->
                         <header v-for="comment in allComment">
                             <div
                                 v-if="comment.post_id == post.id"
-                                class="flex items-center justify-between"
+                                class="flex items-center justify-between my-1 p-2  bg-gray-100 rounded-lg"
                             >
                                 <div class="flex items-center space-x-3">
                                     <!-- User Avatar -->
@@ -434,7 +434,7 @@ onMounted(() => {
                         <form
                             @submit.prevent="
                                 handleWriteComment(
-                                    comment?.users.id,
+                                    authUser.id,
                                     post.id,
                                     1
                                 )
@@ -449,7 +449,7 @@ onMounted(() => {
                             ></textarea>
 
                             <button
-                                class="bg-slate-300 py-1 px-2 rounded-sm shadow-lg flex justify-self-end"
+                                class="bg-slate-200 py-1 px-2 rounded-sm shadow-lg flex justify-self-end"
                                 type="submit"
                             >
                                 <img

@@ -14,10 +14,10 @@ const handleUserLogout = () => {
     axios
         .get("/api/logout")
         .then(function (response) {
-            authUser.value = {};
-            localStorage.removeItem("loggedIn");
             router.push({ name: "Login" });
+            localStorage.removeItem("loggedIn");
             $toast.success(response.data.message);
+            authUser.value = {};
         })
         .catch(function (error) {
             console.log(error);
@@ -197,7 +197,7 @@ onMounted(() => {
                                 >
                                 <button
                                     @click="handleUserLogout"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                                     role="menuitem"
                                     tabindex="-1"
                                     id="user-menu-item-2"
