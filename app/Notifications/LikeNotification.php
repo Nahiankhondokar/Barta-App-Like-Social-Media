@@ -38,24 +38,10 @@ class LikeNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
-        Log::info('broadcast notify');
         return [
             'post_id' => $this->post->id,
             'user_id' => $this->user->id,
             'message' => $this->user->name." likes your post",
         ];
     }
-
-    /**
-     * Get the broadcastable representation of the notification.
-     */
-    // public function toBroadcast(object $notifiable): BroadcastMessage
-    // {
-    //     Log::info('broadcast notify');
-    //     return new BroadcastMessage([
-    //         'post_id' => $this->post->id,
-    //         'user_id' => $this->user->id,
-    //         'message' => $this->user->name." likes your post",
-    //     ]);
-    // }
 }

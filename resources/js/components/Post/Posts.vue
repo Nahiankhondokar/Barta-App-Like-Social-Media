@@ -1,25 +1,30 @@
 <script setup>
 import axios from "axios";
-import { inject, onMounted, reactive, ref, watch } from "vue";
+import { inject, onMounted, reactive, ref, watch, watchEffect } from "vue";
 import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
-import { authenticationCheck } from "../../middleware/authentication";
+import { authenticationCheck, unAuthenticateUser } from "../../middleware/authentication";
 
 const authUser = inject("authUser");
 const searchResponse = inject("posts");
 
+const $toast = useToast();
 let allPost = ref([]);
 let allComment = ref([]);
 let postId = ref(null);
 let currentPage = ref(0);
 let lastPage = ref(0);
-const $toast = useToast();
+let notification = ref(null);
 const commentArea = ref(0);
 const commentForm = ref({
     comment_message: "",
+});
+
+const props = defineProps({
+    authId:Number
 });
 
 const handlePostDropDown = (key = null) => {
@@ -89,6 +94,7 @@ const handlePostUnlike = (userId, postId, likeStatus) => {
             showAllPost();
             showAllComment();
             $toast.success(response.data.message);
+            
         })
         .catch(function (error) {
             $toast.error(error.response.data.message);
@@ -129,6 +135,20 @@ const handleCommentDelete = async (id) => {
         });
 }
 
+const handleBoradcastLikeNotification = async () => {
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
+
+    if(!loggedInUser.id){
+        unAuthenticateUser(401);
+    }else {
+        Echo.private(`post.like.userid.${loggedInUser.id}`)
+        .listen("PostLikeEvent", (e) => {
+            notification.value = e.message;
+            $toast.info(notification.value)
+        });
+    }
+}
+
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
         allPost.value = newData;
@@ -139,15 +159,7 @@ onMounted(() => {
     showAllPost();
     showAllComment();
     authenticationCheck();
-    // Echo.private(`App.Models.User.12`)
-    //         .notification((notification) => {
-    //             console.log(notification)
-    //         });
-
-    Echo.channel(`channel-name`)
-    .listen("PostLikeEvent", (e) => {
-            console.log(e);
-        });
+    handleBoradcastLikeNotification();
 });
 </script>
 

@@ -7,19 +7,22 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class PostLikeEvent implements ShouldBroadcast
+class PostLikeEvent implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    protected $channelName;
     /**
      * Create a new event instance.
      */
     public function __construct(public $post)
     {
-        //
+        $this->channelName = "post.like.userid.".$post->user->id;
     }
 
     /**
@@ -30,12 +33,14 @@ class PostLikeEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('channel-name'),
+            new PrivateChannel($this->channelName),
         ];
     }
 
     public function broadcastWith(): array
     {
-        return ['post' => $this->post];
+        $formatMessage = $this->post->user->name.' liked your post: "'. substr($this->post->barta, 0, 10).'..."';
+
+        return ['message' => $formatMessage];
     }
 }
