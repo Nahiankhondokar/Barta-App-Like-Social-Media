@@ -17,14 +17,9 @@ let allComment = ref([]);
 let postId = ref(null);
 let currentPage = ref(0);
 let lastPage = ref(0);
-let notification = ref(null);
 const commentArea = ref(0);
 const commentForm = ref({
     comment_message: "",
-});
-
-const props = defineProps({
-    authId:Number
 });
 
 const handlePostDropDown = (key = null) => {
@@ -135,7 +130,7 @@ const handleCommentDelete = async (id) => {
         });
 }
 
-const handleBoradcastLikeNotification = async () => {
+const handleBroadcastLikeNotification = () => {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
 
     if(!loggedInUser.id){
@@ -143,8 +138,8 @@ const handleBoradcastLikeNotification = async () => {
     }else {
         Echo.private(`post.like.userid.${loggedInUser.id}`)
         .listen("PostLikeEvent", (e) => {
-            notification.value = e.message;
-            $toast.info(notification.value)
+            console.log(e.message)
+            $toast.info(e.message)
         });
     }
 }
@@ -159,7 +154,13 @@ onMounted(() => {
     showAllPost();
     showAllComment();
     authenticationCheck();
-    handleBoradcastLikeNotification();
+    // handleBroadcastLikeNotification();
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
+    Echo.private(`post.like.userid.${loggedInUser}`)
+        .listen("PostLikeEvent", (e) => {
+            console.log(e.message)
+            $toast.info(e.message)
+        });
 });
 </script>
 

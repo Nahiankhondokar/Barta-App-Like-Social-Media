@@ -18,7 +18,7 @@ onMounted(() => {
 <template>
     <Header v-if="route.path !== '/login' && route.path !== '/register'"></Header>
     <div class="mt-10"></div>
-    <router-view :authId="authUser.id"></router-view>
+    <router-view></router-view>
     <div class="mt-10"></div>
     <Footer  v-if="route.path !== '/login' && route.path !== '/register'"></Footer>
 </template>

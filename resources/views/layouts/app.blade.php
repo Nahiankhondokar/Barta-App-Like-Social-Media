@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0" />
     @include('partials.style')
   </head>
-  @vite('resources/js/app.js')
+  @vite('resources/js/main.js')
   <body class="bg-gray-100">
     @include('partials.header')
 

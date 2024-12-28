@@ -10,6 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class PostLikeEvent implements ShouldBroadcast, ShouldQueue
@@ -20,8 +21,9 @@ class PostLikeEvent implements ShouldBroadcast, ShouldQueue
     /**
      * Create a new event instance.
      */
-    public function __construct(public $post)
+    public function __construct(public $post, public $authUser)
     {
+        Log::info($post);
         $this->channelName = "post.like.userid.".$post->user->id;
     }
 
@@ -30,16 +32,14 @@ class PostLikeEvent implements ShouldBroadcast, ShouldQueue
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn(): Channel
     {
-        return [
-            new PrivateChannel($this->channelName),
-        ];
+        return  new PrivateChannel($this->channelName);
     }
 
     public function broadcastWith(): array
     {
-        $formatMessage = $this->post->user->name.' liked your post: "'. substr($this->post->barta, 0, 10).'..."';
+        $formatMessage = $this->authUser->name.' liked your post: "'. substr($this->post->barta, 0, 10).'..."';
 
         return ['message' => $formatMessage];
     }
