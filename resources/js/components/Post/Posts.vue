@@ -18,6 +18,7 @@ const $toast = useToast();
 let allPost = ref([]);
 let allComment = ref([]);
 let postId = ref(null);
+const broascastPostId = ref(0);
 let currentPage = ref(0);
 let lastPage = ref(0);
 const commentArea = ref(0);
@@ -79,7 +80,11 @@ const handlePostPagination = async () => {
         });
 };
 
-const handlePostUnlike = (userId, postId, likeStatus) => {
+const handlePostLikeUnlike = (userId, postId, likeStatus) => {
+    likeStatus == 1
+        ? broadcastPostLikeChannel(userId)
+        : (broascastPostId.value = 0);
+
     const formData = new FormData();
     formData.append("user_id", userId);
     formData.append("post_id", postId);
@@ -134,31 +139,29 @@ const handleCommentDelete = (id) => {
         });
 };
 
-const handleCommentDelete = async (id) => {
-    await axios
-        .get(`/api/post-reacts/comment-delete/${id}`)
-        .then(function (response) {
-            showAllComment();
-            $toast.success(response.data.message);
-        })
-        .catch(function (error) {
-            $toast.error(error.response.data.message);
-            console.log(error.response.data);
-        });
-};
+const broadcastPostLikeChannel = (newPostUserId) => {
+    console.log(broascastPostId.value);
+    console.log(newPostUserId);
+    if (broascastPostId.value !== newPostUserId) {
+        console.log("call");
+        if (broascastPostId.value) {
+            Echo.private(`post.like.${broascastPostId.value}`).stopListening(
+                "PostLikeEvent"
+            );
+        }
 
-const handleBroadcastLikeNotification = () => {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-    if (!loggedInUser.id) {
-        unAuthenticateUser(401);
-    } else {
-        Echo.private(`post.like.userid.${loggedInUser.id}`).listen(
+        broascastPostId.value = newPostUserId;
+        Echo.private(`post.like.${broascastPostId.value}`).listen(
             "PostLikeEvent",
-            (e) => {
-                console.log(e.message);
-                $toast.info(e.message);
+            (data) => {
+                $toast.info(data.message);
+                console.log(data.message);
             }
+        );
+    } else {
+        console.log("leave");
+        Echo.private(`post.like.${broascastPostId.value}`).stopListening(
+            "PostLikeEvent"
         );
     }
 };
@@ -173,15 +176,6 @@ onMounted(() => {
     showAllPost();
     showAllComment();
     authenticationCheck();
-    // handleBroadcastLikeNotification();
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    Echo.private(`post.like.userid.${loggedInUser}`).listen(
-        "PostLikeEvent",
-        (e) => {
-            console.log(e.message);
-            $toast.info(e.message);
-        }
-    );
 });
 </script>
 
@@ -366,7 +360,11 @@ onMounted(() => {
                                 "
                                 href="#"
                                 @click.prevent="
-                                    handlePostUnlike(post.user.id, post.id, 1)
+                                    handlePostLikeUnlike(
+                                        post.user.id,
+                                        post.id,
+                                        1
+                                    )
                                 "
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"
@@ -387,7 +385,11 @@ onMounted(() => {
                                 v-if="post?.like?.like_status == 1"
                                 href="#"
                                 @click.prevent="
-                                    handlePostUnlike(post?.user.id, post.id, 0)
+                                    handlePostLikeUnlike(
+                                        post?.user.id,
+                                        post.id,
+                                        0
+                                    )
                                 "
                                 type="button"
                                 class="-m-2 flex gap-2 text-xs items-center rounded-full p-2 text-gray-600 hover:text-gray-800"

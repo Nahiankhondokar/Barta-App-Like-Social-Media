@@ -17,7 +17,7 @@ class PostController extends Controller
 {
     use sendApiResponse;
 
-    public function index($pageNum = 5)
+    public function index($pageNum = 20)
     {
         $posts = Post::query()
         ->with('user', 'like')

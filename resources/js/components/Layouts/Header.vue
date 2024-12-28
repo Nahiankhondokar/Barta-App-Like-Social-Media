@@ -14,6 +14,7 @@ const handleUserLogout = () => {
     axios
         .get("/api/logout")
         .then(function (response) {
+            localStorage.removeItem("loggedInUser");
             router.push({ name: "Login" });
             localStorage.removeItem("loggedIn");
             $toast.success(response.data.message);

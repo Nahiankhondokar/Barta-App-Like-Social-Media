@@ -19,6 +19,10 @@ const handleUserLogin = async () => {
     await axios
         .post("/api/login", formData)
         .then(function (response) {
+            localStorage.setItem(
+                "loggedInUser",
+                JSON.stringify(response.data.data)
+            );
             localStorage.setItem("loggedIn", "true");
             router.push({ name: "Dashboard" });
             authenticationCheck();
@@ -115,7 +119,7 @@ const handleUserLogin = async () => {
             <p class="mt-10 text-center text-sm text-gray-500">
                 Don't have an account yet?
                 <router-link
-                    :to="{name: 'Register'}"
+                    :to="{ name: 'Register' }"
                     class="font-semibold leading-6 text-black hover:text-black"
                     >Sign Up</router-link
                 >

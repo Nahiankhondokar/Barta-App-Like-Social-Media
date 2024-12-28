@@ -24,7 +24,8 @@ class PostLikeEvent implements ShouldBroadcast, ShouldQueue
     public function __construct(public $post, public $authUser)
     {
         Log::info($post);
-        $this->channelName = "post.like.userid.".$post->user->id;
+        $this->post->load('user');
+        $this->channelName = "post.like.".$this->post->user->id;
     }
 
     /**
