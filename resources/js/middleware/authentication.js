@@ -5,6 +5,7 @@ import {ref} from "vue";
 export const unAuthenticateUser = (statusCode) => {
    if(statusCode == 401){
         localStorage.removeItem("loggedIn");
+        localStorage.removeItem("loggedInUser");
         router.push({ name: "Login" });
 
         axios
@@ -25,6 +26,7 @@ export const authenticationCheck = async ()=> {
         .get("/api/me")
         .then((response)=> {
             authUser.value = response.data.data;
+            localStorage.setItem('loggedInUser', JSON.stringify(response.data.data));
         }).catch((error) => {
             unAuthenticateUser(error.status);
         });

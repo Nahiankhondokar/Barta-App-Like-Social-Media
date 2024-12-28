@@ -28,15 +28,6 @@ trait sendApiResponse
         }
         $response += $data;
 
-        if (app()->environment() === 'local') {
-            $log = collect(DB::getQueryLog());
-            $response['queries'] = [
-                'duplicates' => $log->count() - $log->unique('query')->count(),
-                'time'       => $log->sum('time'),
-                'log'        => $log->reverse()->toArray(),
-            ];
-        }
-
         return response()->json($response, $code);
     }
 }

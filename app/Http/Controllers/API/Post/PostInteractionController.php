@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Post;
 
+use App\Events\PostLikeEvent;
 use App\Http\Controllers\Controller;
 use App\Mail\CommentMail;
 use App\Models\Comment;
@@ -33,12 +34,14 @@ class PostInteractionController extends Controller
             'like_status'   => $request->like_status,
         ]);
 
-        $post = Post::find($request->post_id);
+        $post = Post::query()->with('user')->where('id', $request->post_id)->first();
         $user = User::find($request->user_id);
+        $authUser = auth()->user();
 
         if($like->like_status == Like::LIKE){
             $message = "Like";
             $user->notify(new LikeNotification($post, $user));
+            PostLikeEvent::dispatch($post, $authUser);
         }else {
             $message = "Unlike";
         }

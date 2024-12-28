@@ -1,22 +1,25 @@
 <script setup>
 import axios from "axios";
-import { inject, onMounted, reactive, ref, watch } from "vue";
+import { inject, onMounted, reactive, ref, watch, watchEffect } from "vue";
 import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
 import { getAllPost } from "../../Service/post";
 import { useToast } from "vue-toast-notification";
-import { authenticationCheck } from "../../middleware/authentication";
+import {
+    authenticationCheck,
+    unAuthenticateUser,
+} from "../../middleware/authentication";
 
 const authUser = inject("authUser");
 const searchResponse = inject("posts");
 
+const $toast = useToast();
 let allPost = ref([]);
 let allComment = ref([]);
 let postId = ref(null);
 let currentPage = ref(0);
 let lastPage = ref(0);
-const $toast = useToast();
 const commentArea = ref(0);
 const commentForm = ref({
     comment_message: "",
@@ -131,6 +134,35 @@ const handleCommentDelete = (id) => {
         });
 };
 
+const handleCommentDelete = async (id) => {
+    await axios
+        .get(`/api/post-reacts/comment-delete/${id}`)
+        .then(function (response) {
+            showAllComment();
+            $toast.success(response.data.message);
+        })
+        .catch(function (error) {
+            $toast.error(error.response.data.message);
+            console.log(error.response.data);
+        });
+};
+
+const handleBroadcastLikeNotification = () => {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!loggedInUser.id) {
+        unAuthenticateUser(401);
+    } else {
+        Echo.private(`post.like.userid.${loggedInUser.id}`).listen(
+            "PostLikeEvent",
+            (e) => {
+                console.log(e.message);
+                $toast.info(e.message);
+            }
+        );
+    }
+};
+
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
         allPost.value = newData;
@@ -141,6 +173,15 @@ onMounted(() => {
     showAllPost();
     showAllComment();
     authenticationCheck();
+    // handleBroadcastLikeNotification();
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    Echo.private(`post.like.userid.${loggedInUser}`).listen(
+        "PostLikeEvent",
+        (e) => {
+            console.log(e.message);
+            $toast.info(e.message);
+        }
+    );
 });
 </script>
 

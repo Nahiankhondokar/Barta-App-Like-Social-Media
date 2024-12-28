@@ -8,7 +8,7 @@
 
     @include('partials.style')
 </head>
-@vite('resources/js/app.js')
+@vite('resources/js/main.js')
 <body>
     <div id="app">
         

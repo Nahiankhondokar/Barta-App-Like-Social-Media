@@ -61,4 +61,12 @@ class User extends Authenticatable
             }
         );
     }
+
+    /**
+     * The channels the user receives notification broadcasts on.
+     */
+    // public function receivesBroadcastNotificationsOn(): string
+    // {
+    //     return 'users.post.like.'.$this->id;
+    // }
 }
