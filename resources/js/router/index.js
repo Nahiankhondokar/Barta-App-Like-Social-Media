@@ -7,6 +7,7 @@ import Register from "../components/Auth/Register.vue";
 import Login from "../components/Auth/Login.vue";
 import PostEdit from "../components/Post/PostEdit.vue";
 import PostView from "../components/Post/PostView.vue";
+import Notification from "../components/Notification/Notification.vue";
 
 const routes = [
     {
@@ -49,6 +50,12 @@ const routes = [
         path: '/post-view/:id',
         name : "PostView",
         component: PostView,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/notifications',
+        name : "Notification",
+        component: Notification,
         meta: { requiresAuth: true }
     },
     {

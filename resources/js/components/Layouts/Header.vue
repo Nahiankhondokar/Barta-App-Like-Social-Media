@@ -111,9 +111,9 @@ onMounted(() => {
                         <div
                             class="notification-icon text-xl text-gray-500 pr-6"
                         >
-                            <a href="">
+                            <router-link :to="{ name: 'Notification' }">
                                 <i class="fa-solid fa-bell"></i>
-                            </a>
+                            </router-link>
                             <!-- <span>1</span> -->
                         </div>
 
