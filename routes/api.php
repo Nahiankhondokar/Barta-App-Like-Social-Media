@@ -44,4 +44,6 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('/comment-delete/{id}', [PostInteractionController::class, "commentDelete"]);
     });
 
+    Route::get('/notifications', [PostInteractionController::class, "getNotification"]);
+
 });

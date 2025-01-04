@@ -13,8 +13,10 @@ use App\Notifications\LikeNotification;
 use App\Traits\sendApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class PostInteractionController extends Controller
 {
@@ -88,6 +90,14 @@ class PostInteractionController extends Controller
         $comment->delete();
 
         return $this->sendApiResponse('', "Commented deleted successfully");
+    }
+
+    public function getNotification(): JsonResponse
+    {
+        $user = User::find(Auth::id());
+        $notifications = $user->notifications;
+
+        return $this->sendApiResponse($notifications, "Notifications list");
     }
 
 }

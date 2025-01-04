@@ -7,6 +7,7 @@ import { useToast } from "vue-toast-notification";
 
 const $toast = useToast();
 let moreOption = ref(false);
+let notifications = ref([]);
 const authUser = inject("authUser");
 let search = inject("posts");
 
@@ -38,8 +39,21 @@ const handlePostSearch = async (e) => {
         });
 };
 
+const handlePostNotification = async (e) => {
+    await axios
+        .get("/api/notifications")
+        .then(function (response) {
+            notifications.value = response.data.data;
+            console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error.response.data.message);
+        });
+};
+
 onMounted(() => {
     authenticationCheck();
+    handlePostNotification();
 });
 </script>
 
