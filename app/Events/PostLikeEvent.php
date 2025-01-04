@@ -17,15 +17,12 @@ class PostLikeEvent implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $channelName;
     /**
      * Create a new event instance.
      */
-    public function __construct(public $post, public $authUser)
+    public function __construct(public $post)
     {
-        Log::info($post);
         $this->post->load('user');
-        $this->channelName = "post.like.".$this->post->user->id;
     }
 
     /**
@@ -35,13 +32,11 @@ class PostLikeEvent implements ShouldBroadcast, ShouldQueue
      */
     public function broadcastOn(): Channel
     {
-        return  new PrivateChannel($this->channelName);
+        return  new Channel('post.like.event');
     }
 
     public function broadcastWith(): array
     {
-        $formatMessage = $this->authUser->name.' liked your post: "'. substr($this->post->barta, 0, 10).'..."';
-
-        return ['message' => $formatMessage];
+        return ['post' => $this->post];
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->longText('barta');
+            // $table->string('title');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
             $table->fullText(['barta']);

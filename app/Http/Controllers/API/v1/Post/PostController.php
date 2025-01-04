@@ -17,7 +17,7 @@ class PostController extends Controller
 {
     use sendApiResponse;
 
-    public function index($pageNum = 20)
+    public function index($pageNum = 5)
     {
         $posts = Post::query()
         ->with('user', 'like')
@@ -39,6 +39,7 @@ class PostController extends Controller
             $post = Post::query()->create([
                 'user_id'   => auth()->user()->id,
                 'barta'     => $request->barta,
+                // 'title'     => $request->title,
                 'image'     => $pathWithFile ?? null,
                 'created_at'=> Carbon::now()
             ]);
@@ -85,6 +86,7 @@ class PostController extends Controller
         }
 
         $post->barta = $request->barta;
+        // $post->title = $request->title;
         $post->image = $pathWithFile ?? null;
         $post->save();
 

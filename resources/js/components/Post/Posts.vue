@@ -1,6 +1,14 @@
 <script setup>
 import axios from "axios";
-import { inject, onMounted, reactive, ref, watch, watchEffect } from "vue";
+import {
+    inject,
+    onBeforeUnmount,
+    onMounted,
+    reactive,
+    ref,
+    watch,
+    watchEffect,
+} from "vue";
 import PostAdd from "./PostAdd.vue";
 import ImageShow from "../ImageShow/ImageShow.vue";
 import moment from "moment";
@@ -18,7 +26,7 @@ const $toast = useToast();
 let allPost = ref([]);
 let allComment = ref([]);
 let postId = ref(null);
-const broascastPostId = ref(0);
+let broascastPostId = ref(0);
 let currentPage = ref(0);
 let lastPage = ref(0);
 const commentArea = ref(0);
@@ -81,10 +89,6 @@ const handlePostPagination = async () => {
 };
 
 const handlePostLikeUnlike = (userId, postId, likeStatus) => {
-    likeStatus == 1
-        ? broadcastPostLikeChannel(userId)
-        : (broascastPostId.value = 0);
-
     const formData = new FormData();
     formData.append("user_id", userId);
     formData.append("post_id", postId);
@@ -139,32 +143,17 @@ const handleCommentDelete = (id) => {
         });
 };
 
-const broadcastPostLikeChannel = (newPostUserId) => {
-    console.log(broascastPostId.value);
-    console.log(newPostUserId);
-    if (broascastPostId.value !== newPostUserId) {
-        console.log("call");
-        if (broascastPostId.value) {
-            Echo.private(`post.like.${broascastPostId.value}`).stopListening(
-                "PostLikeEvent"
-            );
-        }
-
-        broascastPostId.value = newPostUserId;
-        Echo.private(`post.like.${broascastPostId.value}`).listen(
-            "PostLikeEvent",
-            (data) => {
-                $toast.info(data.message);
-                console.log(data.message);
-            }
-        );
-    } else {
-        console.log("leave");
-        Echo.private(`post.like.${broascastPostId.value}`).stopListening(
-            "PostLikeEvent"
+Echo.channel(`post.like.event`).listen("PostLikeEvent", (post) => {
+    console.log(post);
+    if (authUser.value.id == post.post.user.id) {
+        $toast.info(
+            `${authUser.value.name} likes your post : ${post.post.barta.slice(
+                0,
+                10
+            )}...`
         );
     }
-};
+});
 
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {
@@ -177,11 +166,16 @@ onMounted(() => {
     showAllComment();
     authenticationCheck();
 });
+
+onBeforeUnmount(() => {
+    console.log("before unmounted");
+    Echo.leave(`post.like.event`);
+});
 </script>
 
 <template>
     <main
-        class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen"
+        class="container max-w-xl mx-auto space-y-8 px-2 md:px-0 min-h-screen mt-24"
     >
         <PostAdd :showAllPost="showAllPost" />
 

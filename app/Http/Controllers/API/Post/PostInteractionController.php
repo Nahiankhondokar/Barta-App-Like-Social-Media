@@ -13,6 +13,7 @@ use App\Notifications\LikeNotification;
 use App\Traits\sendApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class PostInteractionController extends Controller
@@ -34,14 +35,15 @@ class PostInteractionController extends Controller
             'like_status'   => $request->like_status,
         ]);
 
-        $post = Post::query()->with('user')->where('id', $request->post_id)->first();
+        $post = Post::query()->where('id', $request->post_id)->first();
         $user = User::find($request->user_id);
-        $authUser = auth()->user();
 
         if($like->like_status == Like::LIKE){
             $message = "Like";
             $user->notify(new LikeNotification($post, $user));
-            PostLikeEvent::dispatch($post, $authUser);
+            // PostLikeEvent::dispatch($post);
+
+            broadcast(new PostLikeEvent($post));
         }else {
             $message = "Unlike";
         }

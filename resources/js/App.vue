@@ -16,9 +16,13 @@ onMounted(() => {
 </script>
 
 <template>
-    <Header v-if="route.path !== '/login' && route.path !== '/register'"></Header>
-    <div class="mt-10"></div>
+    <Header
+        v-if="route.path !== '/login' && route.path !== '/register'"
+    ></Header>
+    <!-- <div class="mt-12"></div> -->
     <router-view></router-view>
-    <div class="mt-10"></div>
-    <Footer  v-if="route.path !== '/login' && route.path !== '/register'"></Footer>
+    <!-- <div class="mt-10"></div> -->
+    <Footer
+        v-if="route.path !== '/login' && route.path !== '/register'"
+    ></Footer>
 </template>
