@@ -43,8 +43,6 @@ class PostInteractionController extends Controller
         if($like->like_status == Like::LIKE){
             $message = "Like";
             $user->notify(new LikeNotification($post, $user));
-            // PostLikeEvent::dispatch($post);
-
             broadcast(new PostLikeEvent($post));
         }else {
             $message = "Unlike";
@@ -98,6 +96,18 @@ class PostInteractionController extends Controller
         $notifications = $user->notifications;
 
         return $this->sendApiResponse($notifications, "Notifications list");
+    }
+
+    public function makeAsReadNotification(string $notifyId): JsonResponse
+    {
+        $user = User::find(Auth::id());
+        $notifications = $user->notifications->where('id', $notifyId)->first();
+
+        if($notifications->read_at == null){
+            $notifications->markAsRead();
+            return $this->sendApiResponse($notifications, "Notifications successfully read.");
+        }
+        return $this->sendApiResponse($notifications, "Notification already read.");
     }
 
 }

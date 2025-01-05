@@ -41,7 +41,7 @@ class LikeNotification extends Notification implements ShouldQueue
         return [
             'post_id' => $this->post->id,
             'user_id' => $this->user->id,
-            'message' => $this->user->name." likes your post",
+            'message' => $this->user->name." likes your post: ". substr($this->post->barta, 0, 10)."...",
         ];
     }
 }

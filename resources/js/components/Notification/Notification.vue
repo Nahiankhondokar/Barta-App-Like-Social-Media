@@ -1,9 +1,11 @@
 <script setup>
 import axios from "axios";
 import { inject, onMounted, ref } from "vue";
+import { useToast } from "vue-toast-notification";
 
 const authUser = inject("authUser");
 let notifications = ref([]);
+const $toast = useToast();
 
 const handlePostNotification = async (e) => {
     await axios
@@ -11,6 +13,20 @@ const handlePostNotification = async (e) => {
         .then(function (response) {
             notifications.value = response.data.data;
             // console.log(response);
+        })
+        .catch(function (error) {
+            console.log(error.response.data.message);
+        });
+};
+
+const handleNotifactionRead = async (id) => {
+    await axios
+        .get(`/api/notification-read/${id}`)
+        .then(function (response) {
+            handlePostNotification();
+            $toast.info(response.data.message);
+            // notifications.value = response.data.data;
+            console.log(response);
         })
         .catch(function (error) {
             console.log(error.response.data.message);
@@ -69,7 +85,9 @@ onMounted(() => {
                         <th class="p-4 border-b border-slate-300 bg-slate-50">
                             <p
                                 class="block text-sm font-normal leading-none text-slate-500"
-                            ></p>
+                            >
+                                Actions
+                            </p>
                         </th>
                     </tr>
                 </thead>
@@ -102,9 +120,12 @@ onMounted(() => {
                         <td class="p-4 border-b border-slate-200">
                             <a
                                 href="#"
+                                @click.prevent="
+                                    handleNotifactionRead(notification.id)
+                                "
                                 class="block text-sm font-semibold text-slate-800"
                             >
-                                Read
+                                {{ notification.read_at ? "Read" : "UnRead" }}
                             </a>
                         </td>
                     </tr>

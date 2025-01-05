@@ -45,5 +45,6 @@ Route::middleware('auth:sanctum')->group(function(){
     });
 
     Route::get('/notifications', [PostInteractionController::class, "getNotification"]);
+    Route::get('/notification-read/{id}', [PostInteractionController::class, "makeAsReadNotification"]);
 
 });
