@@ -26,7 +26,7 @@ const handleNotifactionRead = async (id) => {
             handlePostNotification();
             $toast.info(response.data.message);
             // notifications.value = response.data.data;
-            console.log(response);
+            // console.log(response);
         })
         .catch(function (error) {
             console.log(error.response.data.message);

@@ -144,7 +144,6 @@ const handleCommentDelete = (id) => {
 };
 
 Echo.channel(`post.like.event`).listen("PostLikeEvent", (post) => {
-    console.log(post);
     if (authUser.value.id == post.post.user.id) {
         $toast.info(
             `${authUser.value.name} likes your post : ${post.post.barta.slice(
