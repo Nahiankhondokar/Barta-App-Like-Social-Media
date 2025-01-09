@@ -143,16 +143,21 @@ const handleCommentDelete = (id) => {
         });
 };
 
-Echo.channel(`post.like.event`).listen("PostLikeEvent", (post) => {
-    if (authUser.value.id == post.post.user.id) {
-        $toast.info(
-            `${authUser.value.name} likes your post : ${post.post.barta.slice(
-                0,
-                10
-            )}...`
-        );
+const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+console.log(loggedInUser.id);
+Echo.private(`post.like.user.${loggedInUser.id}`).notification(
+    (notification) => {
+        console.log(notification);
+        // if (authUser.value.id == post.post.user.id) {
+        //     $toast.info(
+        //         `${authUser.value.name} likes your post : ${post.post.barta.slice(
+        //             0,
+        //             10
+        //         )}...`
+        //     );
+        // }
     }
-});
+);
 
 watch(searchResponse, (newData, oldData) => {
     if (searchResponse.length != 0) {

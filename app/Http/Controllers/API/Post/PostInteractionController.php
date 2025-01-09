@@ -43,7 +43,7 @@ class PostInteractionController extends Controller
         if($like->like_status == Like::LIKE){
             $message = "Like";
             $user->notify(new LikeNotification($post, $user));
-            broadcast(new PostLikeEvent($post));
+            // broadcast(new PostLikeEvent($post));
         }else {
             $message = "Unlike";
         }
