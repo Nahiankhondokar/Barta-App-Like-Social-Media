@@ -148,14 +148,7 @@ console.log(loggedInUser.id);
 Echo.private(`post.like.user.${loggedInUser.id}`).notification(
     (notification) => {
         console.log(notification);
-        // if (authUser.value.id == post.post.user.id) {
-        //     $toast.info(
-        //         `${authUser.value.name} likes your post : ${post.post.barta.slice(
-        //             0,
-        //             10
-        //         )}...`
-        //     );
-        // }
+        $toast.info(notification.message)
     }
 );
 
