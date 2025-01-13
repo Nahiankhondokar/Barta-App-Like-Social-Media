@@ -17,6 +17,7 @@ return new class extends Migration
             $table->longText('barta');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
+            $table->fullText(['barta']);
         });
     }
 

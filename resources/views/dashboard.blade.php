@@ -23,7 +23,7 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
       <div class="flex-shrink-0">
         <img
           class="h-10 w-10 rounded-full object-cover"
-          src="{{asset(auth()->user()->image)}}"
+          src="{{asset(auth()->user()->image ?? '')}}"
           alt="image" />
       </div>
       <!-- /User Avatar -->
@@ -34,7 +34,7 @@ class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
           class="block w-full p-2 pt-2 text-gray-900 rounded-lg border-none outline-none focus:ring-0 focus:ring-offset-0"
           name="barta"
           rows="2"
-          placeholder="What's going on, {{auth()->user()->username}}?"></textarea>
+          placeholder="What's going on, {{auth()->user()->username ?? ""}}?"></textarea>
       </div>
     </div>
   </div>

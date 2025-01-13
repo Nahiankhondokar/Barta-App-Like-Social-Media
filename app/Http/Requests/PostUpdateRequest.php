@@ -22,7 +22,7 @@ class PostUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'barta'        => ['required', 'string']
+            'barta'        => ['nullable', 'string']
         ];
     }
 }
