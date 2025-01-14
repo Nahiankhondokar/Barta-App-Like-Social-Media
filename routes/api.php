@@ -36,7 +36,3 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::post('/post-search', [UserController::class, 'search'])->name('search');
 });
-
-Route::get('cicd-test', function(){
-    echo 'CICD test is successful';
-});

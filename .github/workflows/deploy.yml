@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       # Step 2: Deploy to VPS
-     - name: Deploy to VPS
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: "103.163.73.10" # Your VPS IP
@@ -24,8 +24,7 @@ jobs:
           port: 22
           script: |
             cd /var/www/Barta-App-Like-Social-Media
-            git reset --hard # Discards any local changes
-            git clean -fd    # Removes untracked files and directories
+            git reset --hard
             git pull origin master
             composer install --no-dev --optimize-autoloader
             php artisan migrate --force
