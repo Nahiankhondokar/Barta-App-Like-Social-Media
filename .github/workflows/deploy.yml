@@ -18,13 +18,19 @@ jobs:
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: "103.163.73.10"
-          username: "ubuntu"
+          host: "103.163.73.10" # Your VPS IP
+          username: "ubuntu" # VPS username
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
-          debug: true # Enables debug output
           script: |
-            echo "SSH connection successful!"
-            whoami
-            pwd
-            ls -la
+            cd /var/www/Barta-App-Like-Social-Media
+            git reset --hard
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan storage:link
+            sudo chown -R www-data:www-data /var/www/Barta-App-Like-Social-Media
+            sudo chmod -R 775 /var/www/Barta-App-Like-Social-Media/storage /var/www/Barta-App-Like-Social-Media/bootstrap/cache

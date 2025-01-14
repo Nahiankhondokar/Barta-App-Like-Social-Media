@@ -38,5 +38,5 @@ Route::middleware('auth:sanctum')->group(function(){
 });
 
 Route::get('cicd-test', function(){
-    echo 'CICD test is successful - hello';
+    echo 'CICD test is successful';
 });
