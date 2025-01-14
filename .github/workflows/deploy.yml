@@ -1,72 +1,34 @@
-name: Deploy-Laravel
+name: Deploy Laravel App
 
 on:
   push:
-    branches: ["master"]
+    branches:
+      - master
 
 jobs:
   deploy:
-    name: Deploy to VPS on main branch push
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the files
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Navigate to Project Directory and Put Application in Maintenance Mode
-        uses: appleboy/ssh-action@master
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.VPS_SSH_KEY  }}
+          host: "103.163.73.10"
           username: "ubuntu"
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
           script: |
             cd /var/www/Barta-App-Like-Social-Media
-            php artisan down
-      - name: Update Codebase
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_SSH_KEY  }}
-          username: "ubuntu"
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /var/www/Barta-App-Like-Social-Media
-            git stash
-            git pull origin main
-      - name: Install Dependencies
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_SSH_KEY  }}
-          username: "ubuntu"
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /var/www/Barta-App-Like-Social-Media
-            npm install
-            npm run build
-            composer install --no-interaction --prefer-dist --optimize-autoloader
-      - name: Run Database Migrations
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_SSH_KEY  }}
-          username: "ubuntu"
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /var/www/Barta-App-Like-Social-Media
+            git reset --hard
+            git pull origin master
+            composer install --no-dev --optimize-autoloader
             php artisan migrate --force
-      - name: Restart Queues
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_SSH_KEY  }}
-          username: "ubuntu"
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /var/www/Barta-App-Like-Social-Media
-            php artisan queue:restart
-      - name: Bring Application Back Online
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.VPS_SSH_KEY  }}
-          username: "ubuntu"
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /var/www/Barta-App-Like-Social-Media
-            php artisan up >/dev/null
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan storage:link
+            sudo chown -R www-data:www-data /var/www/Barta-App-Like-Social-Media
+            sudo chmod -R 775 /var/www/Barta-App-Like-Social-Media/storage /var/www/Barta-App-Like-Social-Media/bootstrap/cache
