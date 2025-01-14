@@ -13,11 +13,6 @@ jobs:
       - name: Checkout the files
         uses: actions/checkout@v2
 
-      - name: Set permissions
-        run: |
-          sudo chown -R www-data:www-data /var/www/Barta-App-Like-Social-Media/storage /var/www/Barta-App-Like-Social-Media/bootstrap/cache
-          sudo chmod -R 775 /var/www/Barta-App-Like-Social-Media/storage /var/www/Barta-App-Like-Social-Media/bootstrap/cache
-
       - name: Navigate to Project Directory and Put Application in Maintenance Mode
         uses: appleboy/ssh-action@master
         with:
