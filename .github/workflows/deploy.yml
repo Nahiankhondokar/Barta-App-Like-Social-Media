@@ -69,4 +69,4 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /var/www/Barta-App-Like-Social-Media
-            php artisan up >/dev/null-Like-Social-Media/bootstrap/cache
+            php artisan up >/dev/null
