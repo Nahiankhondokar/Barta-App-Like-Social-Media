@@ -31,7 +31,7 @@ jobs:
           script: |
             cd /var/www/Barta-App-Like-Social-Media
             git stash
-            git pull origin master
+            git pull origin master --no-rebase
       - name: Install Dependencies
         uses: appleboy/ssh-action@master
         with:
