@@ -38,5 +38,5 @@ Route::middleware('auth:sanctum')->group(function(){
 });
 
 Route::get('cicd-test', function(){
-    echo 'Hello world, Rabib Brother';
+    echo 'Hello world, Rabib Brother, Nahian Khondokar';
 });
