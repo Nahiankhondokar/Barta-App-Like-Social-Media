@@ -31,7 +31,7 @@
         <a
           href="./index.html"
           class="text-center text-6xl font-bold text-gray-900"
-          ><h1>Barta</h1></a
+          ><h1>Barta App</h1></a
         >
 
         <h1
