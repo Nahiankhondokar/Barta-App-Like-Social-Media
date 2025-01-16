@@ -10,7 +10,7 @@ const props = defineProps({
     },
 });
 
-const baseUrl = import.meta.env.VITE_API_URL;
+const baseUrl = import.meta.env.VITE_API_URL ?? "http://103.163.73.10/";
 </script>
 
 <template>
